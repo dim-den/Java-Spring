@@ -122,7 +122,7 @@ public class FilmController
         }
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("playlist");
+        modelAndView.setViewName("filmlist");
 
         return modelAndView;
     }

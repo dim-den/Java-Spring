@@ -1,15 +1,13 @@
-package com.example.lab1;
+package movie.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Collections;
-
 @SpringBootApplication
-public class Lab1Application {
+public class MovieWebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Lab1Application.class, args);
+        SpringApplication.run(MovieWebApplication.class, args);
     }
 
 }
