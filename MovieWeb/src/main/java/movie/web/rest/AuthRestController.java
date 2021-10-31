@@ -1,5 +1,6 @@
 package movie.web.rest;
 
+import movie.web.dto.AuthenticationRequestDTO;
 import movie.web.model.User;
 import movie.web.repository.UserRepository;
 import movie.web.security.JwtTokenProvider;

@@ -3,7 +3,6 @@ package movie.web.service.impl;
 import lombok.RequiredArgsConstructor;
 import movie.web.model.Film;
 import movie.web.repository.FilmRepository;
-import movie.web.repository.UserRepository;
 import movie.web.service.FilmService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film getByID(Long id) {
+    public Film getById(Long id) {
         return filmRepository.findById(id).orElse(null);
     }
 
@@ -43,7 +42,9 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void updateFilm(Long id, Film film) {
-        film.setId(id);
-        filmRepository.save(film);
+        if(getById(id) != null) {
+            film.setId(id);
+            filmRepository.save(film);
+        }
     }
 }

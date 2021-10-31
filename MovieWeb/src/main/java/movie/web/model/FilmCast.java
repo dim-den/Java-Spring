@@ -1,11 +1,14 @@
 package movie.web.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="film_casts")
 public class FilmCast {
     @Id
@@ -14,10 +17,10 @@ public class FilmCast {
     private String roleType;
     private String roleName;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "film_id")
     private Film film;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "actor_id")
     private Actor actor;
 }

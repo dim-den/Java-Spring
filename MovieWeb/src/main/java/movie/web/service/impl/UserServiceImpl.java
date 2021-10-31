@@ -26,12 +26,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByID(Long id) {
+    public User getById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public void deleteUserByID(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void updateUser(Long id, User user) {
+        if(getById(id) != null) {
+            user.setId(id);
+            userRepository.save(user);
+        }
     }
 }

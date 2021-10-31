@@ -7,7 +7,7 @@ import java.util.List;
 public interface FilmReviewService {
     List<FilmReview> getAllFilmReviews();
     FilmReview saveFilmReview(FilmReview filmReview);
-    FilmReview getByID(Long id);
+    FilmReview getById(Long id);
     void deleteFilmReviewById(Long id);
     void updateFilmReview(Long id, FilmReview filmReview);
 }

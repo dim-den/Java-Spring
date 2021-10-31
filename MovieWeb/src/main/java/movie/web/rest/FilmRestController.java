@@ -1,18 +1,22 @@
 package movie.web.rest;
 
+import movie.web.dto.FilmDTO;
 import movie.web.model.Film;
-import movie.web.model.User;
 import movie.web.service.FilmService;
-import movie.web.service.UserService;
 import movie.web.service.impl.FilmServiceImpl;
-import movie.web.service.impl.UserServiceImpl;
+import movie.web.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Validated
 @RequestMapping("/api")
 @RestController
 public class FilmRestController {
@@ -25,37 +29,37 @@ public class FilmRestController {
 
     @GetMapping("/films")
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<Film>> getFilms() {
-        return ResponseEntity.ok(filmService.getAllFilms());
+    public ResponseEntity<List<FilmDTO>> getFilms() {
+        return ResponseEntity.ok(Mapper.mapAll(filmService.getAllFilms(), FilmDTO.class));
     }
 
     @PostMapping("/film/save")
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Film> saveFilm(@RequestBody Film film) {
-        return ResponseEntity.ok(filmService.saveFilm(film));
+    public void saveFilm(@Valid @RequestBody FilmDTO filmDTO) {
+        filmService.saveFilm(Mapper.map(filmDTO, Film.class));
     }
 
     @GetMapping("/film/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
-    ResponseEntity<Film> getFilmById(@PathVariable Long id) {
-        return ResponseEntity.ok(filmService.getByID(id));
+    ResponseEntity<FilmDTO> getFilmById(@PathVariable @Positive Long id) {
+        return ResponseEntity.ok(Mapper.map(filmService.getById(id), FilmDTO.class));
     }
 
     @GetMapping("/film")
     @PreAuthorize("hasAuthority('developers:read')")
-    ResponseEntity<Film> getFilmByTitle(@RequestParam String title) {
-        return ResponseEntity.ok(filmService.getByTitle(title));
+    ResponseEntity<FilmDTO> getFilmByTitle(@RequestParam @NotNull String title) {
+        return ResponseEntity.ok(Mapper.map(filmService.getByTitle(title), FilmDTO.class));
     }
 
     @PutMapping("/film/update/{id}")
-    @PreAuthorize("hasAuthority('developers:read')")
-    void updateFilm(@PathVariable Long id, @RequestBody Film film) {
-        filmService.updateFilm(id, film);
+    @PreAuthorize("hasAuthority('developers:write')")
+    void updateFilm(@PathVariable Long id, @RequestBody @Valid FilmDTO filmDTO) {
+        filmService.updateFilm(id, Mapper.map(filmDTO, Film.class));
     }
 
     @DeleteMapping("/film/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
-    void deleteFilm(@PathVariable Long id) {
+    void deleteFilm(@PathVariable @Positive Long id) {
         filmService.deleteFilmById(id);
     }
 }

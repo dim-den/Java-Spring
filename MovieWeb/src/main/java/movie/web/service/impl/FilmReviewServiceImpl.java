@@ -26,7 +26,7 @@ public class FilmReviewServiceImpl implements FilmReviewService {
     }
 
     @Override
-    public FilmReview getByID(Long id) {
+    public FilmReview getById(Long id) {
         return FilmReviewRepository.findById(id).orElse(null);
     }
 
@@ -37,7 +37,9 @@ public class FilmReviewServiceImpl implements FilmReviewService {
 
     @Override
     public void updateFilmReview(Long id, FilmReview filmReview) {
-        filmReview.setId(id);
-        FilmReviewRepository.save(filmReview);
+        if(getById(id) != null){
+            filmReview.setId(id);
+            FilmReviewRepository.save(filmReview);
+        }
     }
 }

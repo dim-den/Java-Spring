@@ -20,6 +20,7 @@ public class User {
     private Role role;
     @Enumerated(value = EnumType.STRING)
     private Status status;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+
+    @OneToMany(mappedBy = "user")
     private Set<FilmReview> filmReviews;
 }

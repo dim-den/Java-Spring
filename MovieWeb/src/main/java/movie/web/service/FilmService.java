@@ -8,7 +8,7 @@ import java.util.List;
 public interface FilmService {
     List<Film> getAllFilms();
     Film saveFilm(Film film);
-    Film getByID(Long id);
+    Film getById(Long id);
     Film getByTitle(String title);
     void deleteFilmById(Long id);
     void updateFilm(Long id, Film film);

@@ -1,6 +1,8 @@
 package movie.web.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,12 +20,14 @@ public class Film {
     private String description;
     private String director;
     private String country;
-    private Date releaseDate;
+    @Column(name = "release_date")
+    private Date release;
     private Long budget;
-    private Long Fees;
+    private Long fees;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "film")
+    @OneToMany(mappedBy = "film")
     private Set<FilmReview> filmReviews;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "film")
+
+    @OneToMany(mappedBy = "film")
     private Set<FilmCast> filmCasts;
 }

@@ -1,4 +1,4 @@
-package movie.web.rest;
+package movie.web.dto;
 
 import lombok.Data;
 

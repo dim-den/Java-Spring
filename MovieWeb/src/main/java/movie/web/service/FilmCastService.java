@@ -7,7 +7,7 @@ import java.util.List;
 public interface FilmCastService {
     List<FilmCast> getAllFilmCasts();
     FilmCast saveFilmCast(FilmCast filmCast);
-    FilmCast getByID(Long id);
+    FilmCast getById(Long id);
     void deleteFilmCastById(Long id);
     void updateFilmCast(Long id, FilmCast filmCast);
 }

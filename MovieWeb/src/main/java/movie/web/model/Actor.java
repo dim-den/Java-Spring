@@ -17,6 +17,7 @@ public class Actor {
     private String surname;
     private String country;
     private Date bday;
-    @OneToMany(targetEntity = FilmCast.class, fetch = FetchType.EAGER, mappedBy = "actor")
+
+    @OneToMany(mappedBy = "actor")
     private Set<FilmCast> filmCasts;
 }

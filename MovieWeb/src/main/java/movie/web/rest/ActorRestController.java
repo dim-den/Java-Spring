@@ -1,18 +1,21 @@
 package movie.web.rest;
 
+import movie.web.dto.ActorDTO;
 import movie.web.model.Actor;
-import movie.web.model.User;
 import movie.web.service.ActorService;
-import movie.web.service.UserService;
 import movie.web.service.impl.ActorServiceImpl;
-import movie.web.service.impl.UserServiceImpl;
+import movie.web.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Validated
 @RequestMapping("/api")
 @RestController
 public class ActorRestController {
@@ -25,31 +28,31 @@ public class ActorRestController {
 
     @GetMapping("/actors")
     @PreAuthorize("hasAuthority('developers:read')")
-    public ResponseEntity<List<Actor>> getActors() {
-        return ResponseEntity.ok(actorService.getAllActors());
+    public ResponseEntity<List<ActorDTO>> getActors() {
+        return ResponseEntity.ok(Mapper.mapAll(actorService.getAllActors(), ActorDTO.class));
     }
 
     @PostMapping("/actor/save")
     @PreAuthorize("hasAuthority('developers:write')")
-    public ResponseEntity<Actor> saveActor(@RequestBody Actor actor) {
-        return ResponseEntity.ok(actorService.saveActor(actor));
+    public void saveActor(@Valid @RequestBody ActorDTO actorDTO) {
+        actorService.saveActor(Mapper.map(actorDTO, Actor.class));
     }
 
     @GetMapping("/actor/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
-    ResponseEntity<Actor> getActorById(@PathVariable Long id) {
-        return ResponseEntity.ok(actorService.getByID(id));
+    ResponseEntity<ActorDTO> getActorById(@PathVariable @Positive Long id) {
+        return ResponseEntity.ok(Mapper.map(actorService.getById(id), ActorDTO.class));
     }
 
     @PutMapping("/actor/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
-    void updateActor(@PathVariable Long id, @RequestBody Actor actor) {
-        actorService.updateActor(id, actor);
+    void updateActor(@PathVariable @Positive Long id, @Valid @RequestBody ActorDTO actorDTO) {
+        actorService.updateActor(id, Mapper.map(actorDTO, Actor.class));
     }
 
     @DeleteMapping("/actor/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
-    void deleteActor(@PathVariable Long id) {
+    void deleteActor(@PathVariable @Positive Long id) {
         actorService.deleteActorById(id);
     }
 }

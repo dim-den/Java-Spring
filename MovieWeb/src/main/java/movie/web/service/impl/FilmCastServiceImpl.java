@@ -26,7 +26,7 @@ public class FilmCastServiceImpl implements FilmCastService {
     }
 
     @Override
-    public FilmCast getByID(Long id) {
+    public FilmCast getById(Long id) {
         return FilmCastRepository.findById(id).orElse(null);
     }
 
@@ -37,7 +37,9 @@ public class FilmCastServiceImpl implements FilmCastService {
 
     @Override
     public void updateFilmCast(Long id, FilmCast filmCast) {
-        filmCast.setId(id);
-        FilmCastRepository.save(filmCast);
+        if(getById(id) != null) {
+            filmCast.setId(id);
+            FilmCastRepository.save(filmCast);
+        }
     }
 }

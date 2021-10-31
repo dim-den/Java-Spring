@@ -26,7 +26,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Actor getByID(Long id) {
+    public Actor getById(Long id) {
         return ActorRepository.findById(id).orElse(null);
     }
 
@@ -37,7 +37,9 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void updateActor(Long id, Actor actor) {
-        actor.setId(id);
-        ActorRepository.save(actor);
+        if(getById(id) != null) {
+            actor.setId(id);
+            ActorRepository.save(actor);
+        }
     }
 }
