@@ -13,6 +13,16 @@
   }
 }
 
+  .navbar-brand {
+    margin-left: 15px!important;
+  }
+
+  .btn {
+    margin-top: 5px!important;
+    margin-right: 5px!important;
+    margin-bottom: 5px!important;
+  }
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
