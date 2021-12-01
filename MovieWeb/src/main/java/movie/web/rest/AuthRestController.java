@@ -1,5 +1,6 @@
 package movie.web.rest;
 
+import movie.web.aop.Loggable;
 import movie.web.dto.AuthenticationRequestDTO;
 import movie.web.model.User;
 import movie.web.repository.UserRepository;
@@ -34,6 +35,7 @@ public class AuthRestController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Loggable
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
        try {
@@ -53,6 +55,7 @@ public class AuthRestController {
        }
     }
 
+    @Loggable
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();

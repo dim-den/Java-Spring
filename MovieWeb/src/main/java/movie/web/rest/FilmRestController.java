@@ -1,5 +1,6 @@
 package movie.web.rest;
 
+import movie.web.aop.Loggable;
 import movie.web.dto.FilmDTO;
 import movie.web.model.Film;
 import movie.web.service.FilmService;
@@ -27,36 +28,42 @@ public class FilmRestController {
         this.filmService = filmService;
     }
 
+    @Loggable
     @GetMapping("/films")
     @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<List<FilmDTO>> getFilms() {
         return ResponseEntity.ok(Mapper.mapAll(filmService.getAllFilms(), FilmDTO.class));
     }
 
+    @Loggable
     @PostMapping("/film/save")
     @PreAuthorize("hasAuthority('developers:write')")
     public void saveFilm(@Valid @RequestBody FilmDTO filmDTO) {
         filmService.saveFilm(Mapper.map(filmDTO, Film.class));
     }
 
+    @Loggable
     @GetMapping("/film/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
     ResponseEntity<FilmDTO> getFilmById(@PathVariable @Positive Long id) {
         return ResponseEntity.ok(Mapper.map(filmService.getById(id), FilmDTO.class));
     }
 
+    @Loggable
     @GetMapping("/film")
     @PreAuthorize("hasAuthority('developers:read')")
     ResponseEntity<FilmDTO> getFilmByTitle(@RequestParam @NotNull String title) {
         return ResponseEntity.ok(Mapper.map(filmService.getByTitle(title), FilmDTO.class));
     }
 
+    @Loggable
     @PutMapping("/film/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
     void updateFilm(@PathVariable Long id, @RequestBody @Valid FilmDTO filmDTO) {
         filmService.updateFilm(id, Mapper.map(filmDTO, Film.class));
     }
 
+    @Loggable
     @DeleteMapping("/film/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
     void deleteFilm(@PathVariable @Positive Long id) {

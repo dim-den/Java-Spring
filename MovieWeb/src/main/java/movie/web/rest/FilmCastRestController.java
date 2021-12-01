@@ -1,5 +1,6 @@
 package movie.web.rest;
 
+import movie.web.aop.Loggable;
 import movie.web.dto.FilmCastDTO;
 import movie.web.model.FilmCast;
 import movie.web.model.FilmReview;
@@ -37,12 +38,14 @@ public class FilmCastRestController {
         this.filmService = filmService;
     }
 
+    @Loggable
     @GetMapping("/filmCasts")
     @PreAuthorize("hasAuthority('developers:read')")
     ResponseEntity<List<FilmCastDTO>> getFilmCasts() {
         return ResponseEntity.ok(Mapper.mapAll(filmCastService.getAllFilmCasts(), FilmCastDTO.class));
     }
 
+    @Loggable
     @PostMapping("/filmCast/save")
     @PreAuthorize("hasAuthority('developers:write')")
     void saveFilmCast(@RequestBody @Valid FilmCastDTO filmCastDTO) {
@@ -53,12 +56,14 @@ public class FilmCastRestController {
         filmCastService.saveFilmCast(filmCast);
     }
 
+    @Loggable
     @GetMapping("/filmCast/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
     ResponseEntity<FilmCastDTO> getFilmCastById(@PathVariable @Positive Long id) {
         return ResponseEntity.ok(Mapper.map(filmCastService.getById(id), FilmCastDTO.class));
     }
 
+    @Loggable
     @PutMapping("/filmCast/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
     void updateFilmCast(@PathVariable @Positive Long id, @RequestBody @Valid FilmCastDTO filmCastDTO) {
@@ -69,6 +74,7 @@ public class FilmCastRestController {
         filmCastService.updateFilmCast(id, filmCast);
     }
 
+    @Loggable
     @DeleteMapping("/filmCast/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
     void deleteFilmCast(@PathVariable @Positive Long id) {
