@@ -14,7 +14,7 @@ public class FilmReviewDTO {
     private Long id;
     @NotEmpty
     private String review;
-    @Range(min = 1, max = 10)
+    @Range(min = 1, max = 10, message = "Score should be between 1 and 10")
     private int score;
     @NotNull
     @DateTimeFormat()
