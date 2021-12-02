@@ -71,7 +71,7 @@ class Login extends Component {
                             onChange={this.handleChange} autoComplete="password" />
                     </FormGroup>
                     <FormGroup>
-                        <Button color="primary" type="submit" disabled={this.state.loading}>Login</Button>{' '}
+                        <Button color="primary" type="submit" disabled={this.state.loading || !item.email || !item.password}>Login</Button>{' '}
                         <Button color="secondary" tag={Link} to="/register">Don't have an account?</Button>
                     </FormGroup>
                 </Form>

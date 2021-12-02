@@ -19,7 +19,7 @@ class Home extends Component {
             <div>
                 <AppNavbar />
                 <div>
-                    Welcome {user ? user : 'dolboeb'}!<br /><br />
+                    Welcome {user ? user : 'new user'}!<br /><br />
                 </div>
             </div>
         );

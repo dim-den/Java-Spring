@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class FilmReviewDTO {
     private Long id;
-    @NotEmpty
+    @NotEmpty (message = "Review should not be empty")
     private String review;
     @Range(min = 1, max = 10, message = "Score should be between 1 and 10")
     private int score;

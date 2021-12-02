@@ -14,17 +14,16 @@ class FilmList extends Component {
 
     componentDidMount() {
         makeTokenizedRequest('/api/films')
-            .then(response => response.json())
-            .then(data => { console.log(data); this.setState({ films: data })});
-            
+            .then(response => this.setState({ films: response.data }));
+
     }
 
     async remove(id) {
         await makeTokenizedRequest(`api/film/delete/${id}`, 'DELETE')
-        .then(() => {
-            let updatedfilms = [...this.state.films].filter(i => i.id !== id);
-            this.setState({ films: updatedfilms });
-        });
+            .then(() => {
+                let updatedfilms = [...this.state.films].filter(i => i.id !== id);
+                this.setState({ films: updatedfilms });
+            });
     }
 
     render() {

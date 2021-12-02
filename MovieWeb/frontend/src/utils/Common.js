@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const getEmail = () => {
     const userStr = sessionStorage.getItem('email');
     if (userStr) return JSON.parse(userStr);
@@ -43,13 +45,13 @@ export const haveAccess = required_role => {
 }
 
 export const makeTokenizedRequest = (path, method = 'GET', body = null) => {
-    return fetch(path, {
+    return axios(path, {
         method: method,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': getToken()
         },
-        body: body
+        data: body
     });
 }

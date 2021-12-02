@@ -4,10 +4,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,10 +12,10 @@ import java.util.Date;
 public class FilmDTO {
     private Long id;
     @NotEmpty
-    @Max(255)
+    @Size(min=1,max=255)
     private String title;
     @NotEmpty
-    private String genre;
+    private String genre    ;
     @NotEmpty
     private String description;
     @NotEmpty

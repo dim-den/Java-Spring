@@ -14,8 +14,7 @@ class FilmReviewList extends Component {
 
     componentDidMount() {
         makeTokenizedRequest('/api/filmReviews')
-            .then(response => response.json())
-            .then(data => this.setState({ filmReviews: data }));
+        .then(response => this.setState({ filmReviews: response.data }));
     }
 
     async remove(id) {

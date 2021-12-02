@@ -14,8 +14,7 @@ class UserList extends Component {
 
     componentDidMount() {
         makeTokenizedRequest('/api/users')
-            .then(response => response.json())
-            .then(data => this.setState({ users: data }));
+            .then(response => this.setState({ users: response.data }));
     }
 
     async remove(id) {

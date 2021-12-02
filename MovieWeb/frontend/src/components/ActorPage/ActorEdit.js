@@ -16,7 +16,8 @@ class ActorEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem
+            item: this.emptyItem,
+            error: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +25,7 @@ class ActorEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const actor = await (await makeTokenizedRequest(`/api/actor/${this.props.match.params.id}`)).json();
+            const actor = await (await makeTokenizedRequest(`/api/actor/${this.props.match.params.id}`)).data;
             this.setState({ item: actor });
         }
     }
@@ -42,43 +43,48 @@ class ActorEdit extends Component {
         event.preventDefault();
         const { item } = this.state;
 
-        await makeTokenizedRequest('/api/actor' + (item.id ? '/update/' + item.id : '/save'), 
-        (item.id) ? 'PUT' : 'POST',
-         JSON.stringify(item));
-
-        this.props.history.push('/actors');
+        await makeTokenizedRequest('/api/actor' + (item.id ? '/update/' + item.id : '/save'),
+            (item.id) ? 'PUT' : 'POST',
+            JSON.stringify(item))
+            .then(response => this.props.history.push('/actors'))
+            .catch(error => {
+                if (error.response.status === 400) this.setState({ error: error.response.data.errors[0], loading: false });
+                else this.setState({ error: "Wrong value", loading: false });
+            });
     }
 
     render() {
-        const {item} = this.state;
+        const { item } = this.state;
+        const { error } = this.state;
         const title = <h2>{item.id ? 'Edit actor' : 'Add actor'}</h2>;
-    
+
         return <div>
-            <AppNavbar/>
+            <AppNavbar />
             <Container>
                 {title}
+                <h4 style={{ color: 'red' }}>{error}</h4>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Label for="name">Name</Label>
                         <Input type="name" name="name" id="name" value={item.name || ''}
-                               onChange={this.handleChange} autoComplete="name"/>
+                            onChange={this.handleChange} autoComplete="name" />
                     </FormGroup>
                     <FormGroup>
                         <Label for="surname">Surname</Label>
                         <Input type="text" name="surname" id="surname" value={item.surname || ''}
-                               onChange={this.handleChange} autoComplete="surname"/>
+                            onChange={this.handleChange} autoComplete="surname" />
                     </FormGroup>
                     <FormGroup>
                         <Label for="country">Country</Label>
                         <Input type="text" name="country" id="country" value={item.country || ''}
-                               onChange={this.handleChange} autoComplete="country"/>
+                            onChange={this.handleChange} autoComplete="country" />
                     </FormGroup>
                     <FormGroup>
                         <Label for="bday">Birthday</Label>
                         <Input type="date" name="bday" id="bday" value={item.bday || ''}
-                               onChange={this.handleChange} autoComplete="bday"/>
+                            onChange={this.handleChange} autoComplete="bday" />
                     </FormGroup>
-             
+
                     <FormGroup>
                         <Button color="primary" type="submit">Save</Button>{' '}
                         <Button color="secondary" tag={Link} to="/actors">Cancel</Button>

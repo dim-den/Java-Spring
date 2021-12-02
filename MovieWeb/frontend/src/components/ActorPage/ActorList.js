@@ -14,16 +14,15 @@ class ActorList extends Component {
 
     componentDidMount() {
         makeTokenizedRequest('/api/actors')
-            .then(response => response.json())
-            .then(data => this.setState({ actors: data }));
+            .then(response => this.setState({ actors: response.data }));
     }
 
     async remove(id) {
         await makeTokenizedRequest(`api/actor/delete/${id}`, 'DELETE')
-        .then(() => {
-            let updatedActors = [...this.state.actors].filter(i => i.id !== id);
-            this.setState({ actors: updatedActors });
-        });
+            .then(() => {
+                let updatedActors = [...this.state.actors].filter(i => i.id !== id);
+                this.setState({ actors: updatedActors });
+            });
     }
 
     render() {

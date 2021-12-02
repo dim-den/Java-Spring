@@ -26,7 +26,7 @@ class FilmReviewEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const filmReview = await (await makeTokenizedRequest(`/api/filmReview/${this.props.match.params.id}`)).json();
+            const filmReview = await (await makeTokenizedRequest(`/api/filmReview/${this.props.match.params.id}`)).data;
             this.setState({ item: filmReview });
         }
     }
@@ -47,10 +47,7 @@ class FilmReviewEdit extends Component {
         await makeTokenizedRequest('/api/filmReview' + (item.id ? '/update/' + item.id : '/save'), 
                                    (item.id) ? 'PUT' : 'POST',
                                     JSON.stringify(item))
-                                    .then(response => {
-                                        if(response.ok) this.props.history.push('/filmReviews');
-                                    })
-                                    .then(data => {})
+                                    .then(response =>  this.props.history.push('/filmReviews'))
                                     .catch(error => {
                                         if (error.response.status === 400) this.setState({ error: error.response.data.errors[0], loading: false}); 
                                         else this.setState({ error: "Wrong value", loading: false});

@@ -16,7 +16,8 @@ class FilmCastEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem
+            item: this.emptyItem,
+            error: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +25,7 @@ class FilmCastEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const filmCast = await (await makeTokenizedRequest(`/api/filmCast/${this.props.match.params.id}`)).json();
+            const filmCast = await (await makeTokenizedRequest(`/api/filmCast/${this.props.match.params.id}`)).data;
             this.setState({ item: filmCast });
         }
     }
@@ -42,21 +43,26 @@ class FilmCastEdit extends Component {
         event.preventDefault();
         const { item } = this.state;
 
-        await makeTokenizedRequest('/api/filmCast' + (item.id ? '/update/' + item.id : '/save'),
-            (item.id) ? 'PUT' : 'POST',
-            JSON.stringify(item));
-
-        this.props.history.push('/filmCasts');
+        await makeTokenizedRequest('/api/filmReview' + (item.id ? '/update/' + item.id : '/save'), 
+                                   (item.id) ? 'PUT' : 'POST',
+                                    JSON.stringify(item))
+                                    .then(response =>  this.props.history.push('/filmReviews'))
+                                    .catch(error => {
+                                        if (error.response.status === 400) this.setState({ error: error.response.data.errors[0], loading: false}); 
+                                        else this.setState({ error: "Wrong value", loading: false});
+                                    });
     }
 
     render() {
         const { item } = this.state;
+        const { error } = this.state;
         const title = <h2>{item.id ? 'Edit film cast' : 'Add film cast'}</h2>;
 
         return <div>
             <AppNavbar />
             <Container>
                 {title}
+                <h4 style={{ color: 'red' }}>{error}</h4>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Label for="roleType">Role type</Label>
