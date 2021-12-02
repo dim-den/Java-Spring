@@ -12,6 +12,9 @@ import FilmReviewList from './components/FilmReviewPage/FilmReviewList';
 import FilmReviewEdit from "./components/FilmReviewPage/FilmReviewEdit";
 import FilmCastList from './components/FilmCastPage/FilmCastList';
 import FilmCastEdit from "./components/FilmCastPage/FilmCastEdit";
+import Login from "./components/LoginPage/Login";
+import Register from "./components/RegisterPage/Register";
+import PrivateRoute from './utils/PrivateRoute';
 
 class App extends Component {
   render() {
@@ -19,16 +22,18 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path='/' exact={true} component={Home}/>
-            <Route path='/films' exact={true} component={FilmList}/>
-            <Route path='/films/:id' component={FilmEdit}/>
-            <Route path='/actors' exact={true} component={ActorList}/>
-            <Route path='/actors/:id' component={ActorEdit}/>
-            <Route path='/users' exact={true} component={UserList}/>
-            <Route path='/users/:id' component={UserEdit}/>
-            <Route path='/filmReviews' exact={true} component={FilmReviewList}/>
-            <Route path='/filmReviews/:id' component={FilmReviewEdit}/>
-            <Route path='/filmCasts' exact={true} component={FilmCastList}/>
-            <Route path='/filmCasts/:id' component={FilmCastEdit}/>
+            <PrivateRoute hasRole="USER" path='/films' exact={true} component={FilmList}/>
+            <PrivateRoute hasRole="ADMIN" path='/films/:id' component={FilmEdit}/>
+            <PrivateRoute hasRole="USER" path='/actors' exact={true} component={ActorList}/>
+            <PrivateRoute hasRole="ADMIN" path='/actors/:id' component={ActorEdit}/>
+            <PrivateRoute hasRole="ADMIN" path='/users' exact={true} component={UserList}/>
+            <PrivateRoute hasRole="ADMIN" path='/users/:id' component={UserEdit}/>
+            <PrivateRoute hasRole="USER" path='/filmReviews' exact={true} component={FilmReviewList}/>
+            <PrivateRoute hasRole="ADMIN" path='/filmReviews/:id' component={FilmReviewEdit}/>
+            <PrivateRoute hasRole="USER" path='/filmCasts' exact={true} component={FilmCastList}/>
+            <PrivateRoute hasRole="ADMIN" path='/filmCasts/:id' component={FilmCastEdit}/>
+            <Route path='/login' component={Login}/>
+            <Route path='/register' component={Register}/>
           </Switch>
         </Router>
     )

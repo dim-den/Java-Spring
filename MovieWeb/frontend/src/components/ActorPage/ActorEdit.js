@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from './../Navbar/AppNavbar';
+import { getToken, makeTokenizedRequest } from './../../utils/Common';
 
 class ActorEdit extends Component {
 
@@ -23,7 +24,7 @@ class ActorEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const actor = await (await fetch(`/api/actor/${this.props.match.params.id}`)).json();
+            const actor = await (await makeTokenizedRequest(`/api/actor/${this.props.match.params.id}`)).json();
             this.setState({ item: actor });
         }
     }
@@ -41,14 +42,10 @@ class ActorEdit extends Component {
         event.preventDefault();
         const { item } = this.state;
 
-        await fetch('/api/actor' + (item.id ? '/update/' + item.id : '/save'), {
-            method: (item.id) ? 'PUT' : 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item),
-        });
+        await makeTokenizedRequest('/api/actor' + (item.id ? '/update/' + item.id : '/save'), 
+        (item.id) ? 'PUT' : 'POST',
+         JSON.stringify(item));
+
         this.props.history.push('/actors');
     }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from './../Navbar/AppNavbar';
+import { getToken, makeTokenizedRequest } from './../../utils/Common';
 
 class FilmReviewEdit extends Component {
 
@@ -16,7 +17,8 @@ class FilmReviewEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem
+            item: this.emptyItem,
+            error: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +26,7 @@ class FilmReviewEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const filmReview = await (await fetch(`/api/filmReview/${this.props.match.params.id}`)).json();
+            const filmReview = await (await makeTokenizedRequest(`/api/filmReview/${this.props.match.params.id}`)).json();
             this.setState({ item: filmReview });
         }
     }
@@ -42,25 +44,29 @@ class FilmReviewEdit extends Component {
         event.preventDefault();
         const { item } = this.state;
 
-        await fetch('/api/filmReview' + (item.id ? '/update/' + item.id : '/save'), {
-            method: (item.id) ? 'PUT' : 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item),
-        });
-        this.props.history.push('/filmReviews');
+        await makeTokenizedRequest('/api/filmReview' + (item.id ? '/update/' + item.id : '/save'), 
+                                   (item.id) ? 'PUT' : 'POST',
+                                    JSON.stringify(item))
+                                    .then(response => {
+                                        if(response.ok) this.props.history.push('/filmReviews');
+                                    })
+                                    .then(data => {})
+                                    .catch(error => {
+                                        if (error.response.status === 400) this.setState({ error: error.response.data.errors[0], loading: false}); 
+                                        else this.setState({ error: "Wrong value", loading: false});
+                                    });
     }
 
     render() {
         const {item} = this.state;
+        const { error } = this.state;
         const title = <h2>{item.id ? 'Edit film review' : 'Add film review'}</h2>;
     
         return <div>
             <AppNavbar/>
             <Container>
                 {title}
+                <h4 style={{ color: 'red' }}>{error}</h4>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Label for="review">Review</Label>

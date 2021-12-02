@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
 import './../../App.css';
 import AppNavbar from './../Navbar/AppNavbar';
-import { Link } from 'react-router-dom';
-import { Button, Container } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
+import { getEmail } from './../../utils/Common';
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: getEmail()
+        }
+    }
+
     render() {
+        const { user } = this.state;
+
         return (
             <div>
-                <AppNavbar/>
-                <Container fluid>
-                    <Button color="link"><Link to="/users">Users</Link></Button>
-                    <Button color="link"><Link to="/films">Films</Link></Button>
-                    <Button color="link"><Link to="/actors">Actors</Link></Button>
-                    <Button color="link"><Link to="/filmReviews">Film reviews</Link></Button>
-                    <Button color="link"><Link to="/filmCasts">Film casts</Link></Button>
-                </Container>
+                <AppNavbar />
+                <div>
+                    Welcome {user ? user : 'dolboeb'}!<br /><br />
+                </div>
             </div>
         );
     }
 }
-export default Home;
+export default withRouter(Home);

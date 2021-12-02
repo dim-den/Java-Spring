@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from './../Navbar/AppNavbar';
+import {  makeTokenizedRequest } from './../../utils/Common';
 
 class UserEdit extends Component {
 
@@ -24,7 +25,7 @@ class UserEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const user = await (await fetch(`/api/user/${this.props.match.params.id}`)).json();
+            const user = await (await makeTokenizedRequest(`/api/user/${this.props.match.params.id}`)).json();
             this.setState({ item: user });
         }
     }
@@ -42,14 +43,10 @@ class UserEdit extends Component {
         event.preventDefault();
         const { item } = this.state;
 
-        await fetch('/api/user' + (item.id ? '/update/' + item.id : '/save'), {
-            method: (item.id) ? 'PUT' : 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item),
-        });
+        await makeTokenizedRequest('/api/user' + (item.id ? '/update/' + item.id : '/save'),
+            (item.id) ? 'PUT' : 'POST',
+            JSON.stringify(item));
+
         this.props.history.push('/users');
     }
 
