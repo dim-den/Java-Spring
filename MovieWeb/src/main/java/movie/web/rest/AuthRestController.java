@@ -1,10 +1,11 @@
 package movie.web.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.AuthenticationRequestDTO;
 import movie.web.dto.RegistrationRequestDTO;
 import movie.web.model.User;
-import movie.web.repository.UserRepository;
 import movie.web.security.JwtTokenProvider;
 import movie.web.service.UserService;
 import movie.web.service.impl.UserServiceImpl;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +42,7 @@ public class AuthRestController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Logging to system, returns JWT token if success")
     @Loggable
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
@@ -63,6 +64,7 @@ public class AuthRestController {
        }
     }
 
+    @Operation(summary = "Register ruser, returns JWT token if success")
     @Loggable
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequestDTO requestDTO) {
@@ -81,6 +83,7 @@ public class AuthRestController {
         }
     }
 
+    @Operation(summary = "Logout from system")
     @Loggable
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {

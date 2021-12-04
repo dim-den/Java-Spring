@@ -1,5 +1,7 @@
 package movie.web.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.FilmReviewDTO;
 import movie.web.model.FilmReview;
@@ -37,6 +39,7 @@ public class FilmReviewRestController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Get all film reviews", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/filmReviews")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -44,6 +47,7 @@ public class FilmReviewRestController {
         return ResponseEntity.ok(Mapper.mapAll(filmReviewService.getAllFilmReviews(), FilmReviewDTO.class));
     }
 
+    @Operation(summary = "Save film review", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PostMapping("/filmReview/save")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -55,6 +59,7 @@ public class FilmReviewRestController {
         filmReviewService.saveFilmReview(filmReview);
     }
 
+    @Operation(summary = "Get film review by ID", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/filmReview/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -62,6 +67,7 @@ public class FilmReviewRestController {
         return ResponseEntity.ok(Mapper.map(filmReviewService.getById(id), FilmReviewDTO.class));
     }
 
+    @Operation(summary = "Update film review by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PutMapping("/filmReview/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -73,6 +79,7 @@ public class FilmReviewRestController {
         filmReviewService.updateFilmReview(id, Mapper.map(filmReviewDTO, FilmReview.class));
     }
 
+    @Operation(summary = "Delete film review by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @DeleteMapping("/filmReview/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")

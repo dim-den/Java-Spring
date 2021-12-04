@@ -1,13 +1,13 @@
 package movie.web.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.FilmCastDTO;
 import movie.web.model.FilmCast;
-import movie.web.model.FilmReview;
 import movie.web.service.ActorService;
 import movie.web.service.FilmCastService;
 import movie.web.service.FilmService;
-import movie.web.service.UserService;
 import movie.web.service.impl.*;
 import movie.web.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +38,7 @@ public class FilmCastRestController {
         this.filmService = filmService;
     }
 
+    @Operation(summary = "Get all film casts", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/filmCasts")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -45,6 +46,7 @@ public class FilmCastRestController {
         return ResponseEntity.ok(Mapper.mapAll(filmCastService.getAllFilmCasts(), FilmCastDTO.class));
     }
 
+    @Operation(summary = "Save actor", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PostMapping("/filmCast/save")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -56,6 +58,7 @@ public class FilmCastRestController {
         filmCastService.saveFilmCast(filmCast);
     }
 
+    @Operation(summary = "Get film cast by ID", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/filmCast/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -63,6 +66,7 @@ public class FilmCastRestController {
         return ResponseEntity.ok(Mapper.map(filmCastService.getById(id), FilmCastDTO.class));
     }
 
+    @Operation(summary = "Update film cast by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PutMapping("/filmCast/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -74,6 +78,7 @@ public class FilmCastRestController {
         filmCastService.updateFilmCast(id, filmCast);
     }
 
+    @Operation(summary = "Delete film cast by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @DeleteMapping("/filmCast/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")

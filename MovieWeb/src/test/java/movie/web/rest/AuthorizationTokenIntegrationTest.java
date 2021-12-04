@@ -1,4 +1,4 @@
-package movie.web.integration;
+package movie.web.rest;
 
 import movie.web.model.Role;
 import movie.web.security.JwtTokenProvider;

@@ -1,8 +1,13 @@
 package movie.web.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.ActorDTO;
 import movie.web.model.Actor;
+import movie.web.model.Role;
 import movie.web.service.ActorService;
 import movie.web.service.impl.ActorServiceImpl;
 import movie.web.util.Mapper;
@@ -27,6 +32,7 @@ public class ActorRestController {
         this.actorService = actorService;
     }
 
+    @Operation(summary = "Get all tasks", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/actors")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -34,6 +40,7 @@ public class ActorRestController {
         return ResponseEntity.ok(Mapper.mapAll(actorService.getAllActors(), ActorDTO.class));
     }
 
+    @Operation(summary = "Save actor", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PostMapping("/actor/save")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -41,6 +48,7 @@ public class ActorRestController {
         actorService.saveActor(Mapper.map(actorDTO, Actor.class));
     }
 
+    @Operation(summary = "Get actor by ID", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/actor/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -48,6 +56,7 @@ public class ActorRestController {
         return ResponseEntity.ok(Mapper.map(actorService.getById(id), ActorDTO.class));
     }
 
+    @Operation(summary = "Update actor by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PutMapping("/actor/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -55,6 +64,7 @@ public class ActorRestController {
         actorService.updateActor(id, Mapper.map(actorDTO, Actor.class));
     }
 
+    @Operation(summary = "Delete actor by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @DeleteMapping("/actor/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")

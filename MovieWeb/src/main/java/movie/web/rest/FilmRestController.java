@@ -1,5 +1,7 @@
 package movie.web.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.FilmDTO;
 import movie.web.model.Film;
@@ -28,6 +30,7 @@ public class FilmRestController {
         this.filmService = filmService;
     }
 
+    @Operation(summary = "Get all films", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/films")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -35,6 +38,7 @@ public class FilmRestController {
         return ResponseEntity.ok(Mapper.mapAll(filmService.getAllFilms(), FilmDTO.class));
     }
 
+    @Operation(summary = "Save film", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PostMapping("/film/save")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -42,6 +46,7 @@ public class FilmRestController {
         filmService.saveFilm(Mapper.map(filmDTO, Film.class));
     }
 
+    @Operation(summary = "Get film by ID", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/film/{id}")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -49,6 +54,7 @@ public class FilmRestController {
         return ResponseEntity.ok(Mapper.map(filmService.getById(id), FilmDTO.class));
     }
 
+    @Operation(summary = "Get film by title name", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/film")
     @PreAuthorize("hasAuthority('developers:read')")
@@ -56,6 +62,7 @@ public class FilmRestController {
         return ResponseEntity.ok(Mapper.map(filmService.getByTitle(title), FilmDTO.class));
     }
 
+    @Operation(summary = "Update film by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PutMapping("/film/update/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
@@ -63,6 +70,7 @@ public class FilmRestController {
         filmService.updateFilm(id, Mapper.map(filmDTO, Film.class));
     }
 
+    @Operation(summary = "Delete film by ID", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @DeleteMapping("/film/delete/{id}")
     @PreAuthorize("hasAuthority('developers:write')")
