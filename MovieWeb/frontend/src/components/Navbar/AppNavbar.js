@@ -22,11 +22,18 @@ class AppNavbar extends Component {
         return <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="collapse navbar-collapse" id="navbarMobileToggle">
                 <NavbarBrand tag={Link} to="/">Home</NavbarBrand>
-                {haveAccess("ADMIN") ? <NavbarBrand tag={Link} to="/users">Users</NavbarBrand> : null }
-                <NavbarBrand tag={Link} to="/films">Films</NavbarBrand>
-                <NavbarBrand tag={Link} to="/actors">Actors</NavbarBrand>
-                <NavbarBrand tag={Link} to="/filmReviews">Film reviews</NavbarBrand>
-                <NavbarBrand tag={Link} to="/filmCasts">Film casts</NavbarBrand>
+
+                {haveAccess("ADMIN") ? <NavbarBrand tag={Link} to="/users">Users</NavbarBrand> : null}
+
+                {isAuthorized ?
+                    <div>
+                        <NavbarBrand tag={Link} to="/films">Films</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/actors">Actors</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/filmReviews">Film reviews</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/filmCasts">Film casts</NavbarBrand>
+                    </div>
+                    : null
+                }
 
 
             </div>

@@ -22,6 +22,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path='/' exact={true} component={Home}/>
+            
             <PrivateRoute hasRole="USER" path='/films' exact={true} component={FilmList}/>
             <PrivateRoute hasRole="ADMIN" path='/films/:id' component={FilmEdit}/>
             <PrivateRoute hasRole="USER" path='/actors' exact={true} component={ActorList}/>
