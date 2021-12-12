@@ -8,18 +8,16 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="users")
+@Table(name="USERS")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String username;
     private String passwordHash;
     @Enumerated(value = EnumType.STRING)
     private Role role;
-    @Enumerated(value = EnumType.STRING)
-    private Status status;
 
     @OneToMany(mappedBy = "user")
     private Set<FilmReview> filmReviews;

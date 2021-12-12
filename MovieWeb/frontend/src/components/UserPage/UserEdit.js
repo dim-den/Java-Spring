@@ -10,8 +10,7 @@ class UserEdit extends Component {
         email: '',
         username: '',
         passwordHash: '',
-        role: '',
-        status: ''
+        role: ''
     };
 
     constructor(props) {
@@ -87,12 +86,7 @@ class UserEdit extends Component {
                         <Input type="text" name="role" id="role" value={item.role || ''}
                             onChange={this.handleChange} autoComplete="role" />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="status">Status</Label>
-                        <Input type="text" name="status" id="status" value={item.status || ''}
-                            onChange={this.handleChange} autoComplete="status" />
-                    </FormGroup>
-
+                    
                     <FormGroup>
                         <Button color="primary" type="submit">Save</Button>{' '}
                         <Button color="secondary" tag={Link} to="/users">Cancel</Button>

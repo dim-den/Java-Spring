@@ -8,7 +8,6 @@ class FilmEdit extends Component {
 
     emptyItem = {
         title: '',
-        genre: '',
         description: '',
         director: '',
         country: '',
@@ -72,11 +71,6 @@ class FilmEdit extends Component {
                         <Label for="title">Title</Label>
                         <Input type="text" name="title" id="title" value={item.title || ''}
                             onChange={this.handleChange} autoComplete="title" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="genre">Genre</Label>
-                        <Input type="text" name="genre" id="genre" value={item.genre || ''}
-                            onChange={this.handleChange} autoComplete="genre" />
                     </FormGroup>
                     <FormGroup>
                         <Label for="description">Description</Label>

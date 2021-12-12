@@ -22,7 +22,15 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film saveFilm(Film film) {
-        return filmRepository.save(film);
+        filmRepository.addFilm(
+                film.getTitle(),
+                film.getDescription(),
+                film.getDirector(),
+                film.getCountry(),
+                film.getRelease(),
+                film.getBudget(),
+                film.getFees());
+        return film;
     }
 
     @Override
@@ -37,14 +45,20 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void deleteFilmById(Long id) {
-        filmRepository.deleteById(id);
+        filmRepository.deleteFilmById(id);
     }
 
     @Override
     public void updateFilm(Long id, Film film) {
-        if(getById(id) != null) {
-            film.setId(id);
-            filmRepository.save(film);
+        if (getById(id) != null) {
+            filmRepository.updateFilm(id,
+                    film.getTitle(),
+                    film.getDescription(),
+                    film.getDirector(),
+                    film.getCountry(),
+                    film.getRelease(),
+                    film.getBudget(),
+                    film.getFees());
         }
     }
 }

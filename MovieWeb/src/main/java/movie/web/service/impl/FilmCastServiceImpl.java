@@ -13,33 +13,41 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class FilmCastServiceImpl implements FilmCastService {
-    private final FilmCastRepository FilmCastRepository;
+    private final FilmCastRepository filmCastRepository;
 
     @Override
     public List<FilmCast> getAllFilmCasts() {
-        return FilmCastRepository.findAll();
+        return filmCastRepository.findAll();
     }
 
     @Override
     public FilmCast saveFilmCast(FilmCast filmCast) {
-        return FilmCastRepository.save(filmCast);
+        filmCastRepository.addFilmCast(
+                filmCast.getRoleType(),
+                filmCast.getRoleName(),
+                filmCast.getActor().getId(),
+                filmCast.getFilm().getId());
+        return filmCast;
     }
 
     @Override
     public FilmCast getById(Long id) {
-        return FilmCastRepository.findById(id).orElse(null);
+        return filmCastRepository.findById(id).orElse(null);
     }
 
     @Override
     public void deleteFilmCastById(Long id) {
-        FilmCastRepository.deleteById(id);
+        filmCastRepository.deleteFilmCastById(id);
     }
 
     @Override
     public void updateFilmCast(Long id, FilmCast filmCast) {
         if(getById(id) != null) {
-            filmCast.setId(id);
-            FilmCastRepository.save(filmCast);
+            filmCastRepository.updateFilmCast(id,
+                    filmCast.getRoleType(),
+                    filmCast.getRoleName(),
+                    filmCast.getActor().getId(),
+                    filmCast.getFilm().getId());
         }
     }
 }

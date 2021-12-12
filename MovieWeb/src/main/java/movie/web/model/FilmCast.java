@@ -9,10 +9,10 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name="film_casts")
+@Table(name="FILM_CAST")
 public class FilmCast {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String roleType;
     private String roleName;

@@ -35,8 +35,8 @@ class FilmList extends Component {
 
         const filmList = films.map(film => {
             return <tr key={film.id}>
+                <td>{film.id}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{film.title}</td>
-                <td>{film.genre}</td>
                 <td>{film.description}</td>
                 <td>{film.director}</td>
                 <td>{film.country}</td>
@@ -69,8 +69,8 @@ class FilmList extends Component {
                     <Table className="mt-4">
                         <thead>
                             <tr>
+                                <th width="5%">ID</th>    
                                 <th width="10%">Title</th>
-                                <th width="10%">Genre</th>
                                 <th width="25%">Description</th>
                                 <th width="10%">Director</th>
                                 <th width="10%">Country</th>

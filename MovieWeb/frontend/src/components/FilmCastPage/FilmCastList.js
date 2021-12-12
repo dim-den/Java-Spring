@@ -34,6 +34,7 @@ class FilmCastList extends Component {
 
         const filmCastList = filmCasts.map(filmCast => {
             return <tr key={filmCast.id}>
+                <td>{filmCast.id}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{filmCast.roleType}</td>
                 <td>{filmCast.roleName}</td>
                 <td>{filmCast.actorId}</td>
@@ -64,6 +65,7 @@ class FilmCastList extends Component {
                     <Table className="mt-4">
                         <thead>
                             <tr>
+                                <th width="5%">ID</th>    
                                 <th width="20%">Role type</th>
                                 <th width="20%">Role name</th>
                                 <th width="10%">Actor ID</th>

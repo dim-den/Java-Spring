@@ -12,6 +12,7 @@ import movie.web.service.ActorService;
 import movie.web.service.impl.ActorServiceImpl;
 import movie.web.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,12 +33,28 @@ public class ActorRestController {
         this.actorService = actorService;
     }
 
-    @Operation(summary = "Get all tasks", security = @SecurityRequirement(name = "developers:read"))
+    @Operation(summary = "Get all actors", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/actors")
     @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<List<ActorDTO>> getActors() {
         return ResponseEntity.ok(Mapper.mapAll(actorService.getAllActors(), ActorDTO.class));
+    }
+
+    @Operation(summary = "Get page of actors", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/actors", params = { "page", "size" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<ActorDTO>> getActorsPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(Mapper.mapAll(actorService.getActorsPaginated(page, size).toList(), ActorDTO.class));
+    }
+
+    @Operation(summary = "Get count of actors", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping("/actors/count")
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<Long> getActorsCount() {
+        return ResponseEntity.ok(actorService.getActorsCount());
     }
 
     @Operation(summary = "Save actor", security = @SecurityRequirement(name = "developers:write"))

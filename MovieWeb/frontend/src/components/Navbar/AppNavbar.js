@@ -31,6 +31,8 @@ class AppNavbar extends Component {
                         <NavbarBrand tag={Link} to="/actors">Actors</NavbarBrand>
                         <NavbarBrand tag={Link} to="/filmReviews">Film reviews</NavbarBrand>
                         <NavbarBrand tag={Link} to="/filmCasts">Film casts</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/filmGenres">Film genres</NavbarBrand>
+                        <NavbarBrand tag={Link} to="/genres">Genres</NavbarBrand>
                     </div>
                     : null
                 }

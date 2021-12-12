@@ -15,8 +15,6 @@ public class FilmDTO {
     @Size(min=1,max=255)
     private String title;
     @NotEmpty
-    private String genre    ;
-    @NotEmpty
     private String description;
     @NotEmpty
     private String director;

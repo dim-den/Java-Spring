@@ -4,46 +4,45 @@ import AppNavbar from './../Navbar/AppNavbar';
 import { Link } from 'react-router-dom';
 import { haveAccess, makeTokenizedRequest } from './../../utils/Common';
 
-class UserList extends Component {
+class FilmGenreList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { users: [] };
+        this.state = { filmGenres: [] };
         this.remove = this.remove.bind(this);
     }
 
     componentDidMount() {
-        makeTokenizedRequest('/api/users')
-            .then(response => this.setState({ users: response.data }));
+        makeTokenizedRequest('/api/filmGenres')
+        .then(response => this.setState({ filmGenres: response.data }));
     }
 
     async remove(id) {
-        await makeTokenizedRequest(`api/user/delete/${id}`, 'DELETE')
-        .then(() => {
-            let updatedUsers = [...this.state.users].filter(i => i.id !== id);
-            this.setState({ users: updatedUsers });
-        });
+        await makeTokenizedRequest(`api/filmGenre/delete/${id}`, 'DELETE')
+            .then(() => {
+                let updatedFilmGenres = [...this.state.filmGenres].filter(i => i.id !== id);
+                this.setState({ filmGenres: updatedFilmGenres });
+            });
     }
 
     render() {
-        const { users, isLoading } = this.state;
+        const { filmGenres, isLoading } = this.state;
 
         if (isLoading) {
             return <p>Loading...</p>;
         }
 
-        const userList = users.map(user => {
-            return <tr key={user.id}>
-                 <td>{user.id}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>{user.email}</td>
-                <td>{user.username}</td>
-                <td>{user.passwordHash}</td>
-                <td>{user.role}</td>
+        const filmGenreList = filmGenres.map(filmGenre => {
+            return <tr key={filmGenre.id}>
+                <td>{filmGenre.id}</td>
+                <td>{filmGenre.filmId}</td>
+                <td>{filmGenre.genreId}</td>
+
                 {haveAccess("ADMIN") ?
                     <td>
                         <ButtonGroup>
-                            <Button size="sm" color="primary" tag={Link} to={"users/" + user.id}>Edit</Button>
-                            <Button size="sm" color="danger" onClick={() => this.remove(user.id)}>Delete</Button>
+                            <Button size="sm" color="primary" tag={Link} to={"filmGenres/" + filmGenre.id}>Edit</Button>
+                            <Button size="sm" color="danger" onClick={() => this.remove(filmGenre.id)}>Delete</Button>
                         </ButtonGroup>
                     </td>
                     : null
@@ -57,23 +56,21 @@ class UserList extends Component {
                 <Container fluid>
                     {haveAccess("ADMIN") ?
                         <div className="float-right">
-                            <Button color="success" tag={Link} to="/users/new">Add user</Button>
+                            <Button color="success" tag={Link} to="/filmGenres/new">Add film genre</Button>
                         </div>
                         : null
                     }
-                    <h3>Users</h3>
+                    <h3>Film genres</h3>
                     <Table className="mt-4">
                         <thead>
                             <tr>
                                 <th width="5%">ID</th>    
-                                <th width="20%">Email</th>
-                                <th width="20%">Username</th>
-                                <th width="30%">Password</th>
-                                <th width="15%">Role</th>
+                                <th width="40%">Film ID</th>
+                                <th width="40%">Genre ID</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {userList}
+                            {filmGenreList}
                         </tbody>
                     </Table>
                 </Container>
@@ -81,4 +78,4 @@ class UserList extends Component {
         );
     }
 }
-export default UserList;
+export default FilmGenreList;

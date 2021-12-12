@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
 import AppNavbar from './../Navbar/AppNavbar';
-import { makeTokenizedRequest } from './../../utils/Common';
+import { getToken, makeTokenizedRequest } from './../../utils/Common';
 
-class FilmCastEdit extends Component {
+class FilmGenreEdit extends Component {
 
     emptyItem = {
-        roletType: '',
-        roleName: '',
-        actorId: 0,
-        filmId: 0
+        filmId:0,
+        genreId:0
     };
 
     constructor(props) {
@@ -25,8 +23,8 @@ class FilmCastEdit extends Component {
 
     async componentDidMount() {
         if (this.props.match.params.id !== 'new') {
-            const filmCast = await (await makeTokenizedRequest(`/api/filmCast/${this.props.match.params.id}`)).data;
-            this.setState({ item: filmCast });
+            const filmGenre = await (await makeTokenizedRequest(`/api/filmGenre/${this.props.match.params.id}`)).data;
+            this.setState({ item: filmGenre });
         }
     }
 
@@ -43,10 +41,10 @@ class FilmCastEdit extends Component {
         event.preventDefault();
         const { item } = this.state;
 
-        await makeTokenizedRequest('/api/filmCast' + (item.id ? '/update/' + item.id : '/save'), 
+        await makeTokenizedRequest('/api/filmGenre' + (item.id ? '/update/' + item.id : '/save'), 
                                    (item.id) ? 'PUT' : 'POST',
                                     JSON.stringify(item))
-                                    .then(response =>  this.props.history.push('/filmCasts'))
+                                    .then(response =>  this.props.history.push('/filmGenres'))
                                     .catch(error => {
                                         if (error.response.status === 400) this.setState({ error: error.response.data.errors[0], loading: false}); 
                                         else this.setState({ error: "Wrong value", loading: false});
@@ -54,39 +52,29 @@ class FilmCastEdit extends Component {
     }
 
     render() {
-        const { item } = this.state;
+        const {item} = this.state;
         const { error } = this.state;
-        const title = <h2>{item.id ? 'Edit film cast' : 'Add film cast'}</h2>;
-
+        const title = <h2>{item.id ? 'Edit film genre' : 'Add film genre'}</h2>;
+    
         return <div>
-            <AppNavbar />
+            <AppNavbar/>
             <Container>
                 {title}
                 <h4 style={{ color: 'red' }}>{error}</h4>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Label for="roleType">Role type</Label>
-                        <Input type="text" name="roleType" id="roleType" value={item.roleType || ''}
-                            onChange={this.handleChange} autoComplete="roleType" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="roleName">Role name</Label>
-                        <Input type="text" name="roleName" id="roleName" value={item.roleName || ''}
-                            onChange={this.handleChange} autoComplete="roleName" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="actorId">Actor ID</Label>
-                        <Input type="number" name="actorId" id="actorId" value={item.actorId || ''}
-                            onChange={this.handleChange} autoComplete="actorId" />
-                    </FormGroup>
-                    <FormGroup>
                         <Label for="filmId">Film ID</Label>
                         <Input type="number" name="filmId" id="filmId" value={item.filmId || ''}
-                            onChange={this.handleChange} autoComplete="filmId" />
+                               onChange={this.handleChange} autoComplete="filmId"/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="genreId">Genre ID</Label>
+                        <Input type="number" name="genreId" id="genreId" value={item.genreId || ''}
+                               onChange={this.handleChange} autoComplete="genreId"/>
                     </FormGroup>
                     <FormGroup>
                         <Button color="primary" type="submit">Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/filmCasts">Cancel</Button>
+                        <Button color="secondary" tag={Link} to="/filmGenres">Cancel</Button>
                     </FormGroup>
                 </Form>
             </Container>
@@ -94,4 +82,4 @@ class FilmCastEdit extends Component {
     }
 
 }
-export default withRouter(FilmCastEdit);
+export default withRouter(FilmGenreEdit);

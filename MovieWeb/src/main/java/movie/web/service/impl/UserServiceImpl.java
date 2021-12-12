@@ -4,24 +4,16 @@ import lombok.RequiredArgsConstructor;
 import movie.web.dto.RegistrationRequestDTO;
 import movie.web.exception.EmailAlreadyExistsException;
 import movie.web.exception.PasswordsMismatchException;
-import movie.web.exception.RegistrationException;
 import movie.web.exception.UsernameAlreadyExistsException;
 import movie.web.model.Role;
-import movie.web.model.Status;
 import movie.web.model.User;
 import movie.web.repository.UserRepository;
 import movie.web.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +29,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        return userRepository.save(user);
+        userRepository.addUser(
+                user.getEmail(),
+                user.getUsername(),
+                user.getPasswordHash(),
+                user.getRole().name());
+        return user;
     }
 
     @Override
@@ -57,14 +54,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserByID(Long id) {
-        userRepository.deleteById(id);
+        userRepository.deleteUserById(id);
     }
 
     @Override
     public void updateUser(Long id, User user) {
         if (getById(id) != null) {
-            user.setId(id);
-            userRepository.save(user);
+            userRepository.updateUser(id,
+                    user.getEmail(),
+                    user.getUsername(),
+                    user.getPasswordHash(),
+                    user.getRole().name());
         }
     }
 
@@ -87,7 +87,6 @@ public class UserServiceImpl implements UserService {
         user.setUsername(registrationRequestDTO.getUsername());
         user.setPasswordHash(passwordEncoder.encode(registrationRequestDTO.getPassword()));
         user.setRole(Role.USER);
-        user.setStatus(Status.ACTIVE);
 
         return saveUser(user);
     }

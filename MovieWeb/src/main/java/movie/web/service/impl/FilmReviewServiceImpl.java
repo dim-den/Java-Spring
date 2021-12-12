@@ -13,33 +13,43 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class FilmReviewServiceImpl implements FilmReviewService {
-    private final FilmReviewRepository FilmReviewRepository;
+    private final FilmReviewRepository filmReviewRepository;
 
     @Override
     public List<FilmReview> getAllFilmReviews() {
-        return FilmReviewRepository.findAll();
+        return filmReviewRepository.findAll();
     }
 
     @Override
     public FilmReview saveFilmReview(FilmReview filmReview) {
-        return FilmReviewRepository.save(filmReview);
+        filmReviewRepository.addFilmReview(
+                filmReview.getReview(),
+                filmReview.getScore(),
+                filmReview.getPublished(),
+                filmReview.getFilm().getId(),
+                filmReview.getUser().getId());
+        return filmReview;
     }
 
     @Override
     public FilmReview getById(Long id) {
-        return FilmReviewRepository.findById(id).orElse(null);
+        return filmReviewRepository.findById(id).orElse(null);
     }
 
     @Override
     public void deleteFilmReviewById(Long id) {
-        FilmReviewRepository.deleteById(id);
+        filmReviewRepository.deleteFilmReviewById(id);
     }
 
     @Override
     public void updateFilmReview(Long id, FilmReview filmReview) {
         if(getById(id) != null){
-            filmReview.setId(id);
-            FilmReviewRepository.save(filmReview);
+            filmReviewRepository.updateFilmReview(id,
+                    filmReview.getReview(),
+                    filmReview.getScore(),
+                    filmReview.getPublished(),
+                    filmReview.getFilm().getId(),
+                    filmReview.getUser().getId());
         }
     }
 }

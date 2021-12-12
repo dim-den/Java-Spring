@@ -3,18 +3,42 @@ import { Button, ButtonGroup, Container, Table } from 'reactstrap';
 import AppNavbar from './../Navbar/AppNavbar';
 import { Link } from 'react-router-dom';
 import { haveAccess, getToken, makeTokenizedRequest } from './../../utils/Common';
+import Pagination from './../Pagination/Pagination';
+
+const pageSize = 10;
 
 class ActorList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { actors: [] };
+        this.state = { actors: [], currentActors: [], totalActors: 0, currentPage: null, totalPages: null };
         this.remove = this.remove.bind(this);
     }
 
     componentDidMount() {
-        makeTokenizedRequest('/api/actors')
-            .then(response => this.setState({ actors: response.data }));
+        makeTokenizedRequest(`/api/actors?page=${0}&size=${pageSize}`)
+            .then(response => this.setState({ actors: response.data}));
+
+        makeTokenizedRequest(`/api/actors/count`)
+            .then(response => this.setState({totalActors: response.data }));
+    }
+
+    onPageChanged = data => {
+        // const { actors } = this.state;
+        // const { currentPage, totalPages, pageLimit } = data;
+
+        // const offset = (currentPage - 1) * pageLimit;
+        // const currentActors = actors.slice(offset, offset + pageLimit);
+
+        // this.setState({ currentPage, currentActors, totalPages });
+
+        const { currentPage, totalPages, pageLimit } = data;
+
+        makeTokenizedRequest(`/api/actors?page=${currentPage-1}&size=${pageLimit}`)
+            .then(response => {
+                const currentActors = response.data;
+                this.setState({ currentPage, currentActors, totalPages });
+            });
     }
 
     async remove(id) {
@@ -26,13 +50,15 @@ class ActorList extends Component {
     }
 
     render() {
-        const { actors, isLoading } = this.state;
+        const { currentActors, totalActors, currentPage, totalPages, isLoading } = this.state;
+
+        if (totalActors === 0) return null;
 
         if (isLoading) {
             return <p>Loading...</p>;
         }
 
-        const actorList = actors.map(actor => {
+        const actorList = currentActors.map(actor => {
             return <tr key={actor.id}>
                 <td style={{ whiteSpace: 'nowrap' }}>{actor.name}</td>
                 <td>{actor.surname}</td>
@@ -53,6 +79,23 @@ class ActorList extends Component {
         return (
             <div>
                 <AppNavbar />
+
+                <div className="w-100 px-4 pt-4 d-flex flex-row flex-wrap align-items-center justify-content-between">
+                    <div className="d-flex flex-row align-items-center">
+
+
+                        {currentPage && (
+                            <span className="current-page d-inline-block h-100 pl-4">
+                                Page <span className="font-weight-bold">{currentPage}</span> / <span className="font-weight-bold">{totalPages}</span>
+                            </span>
+                        )}
+
+                    </div>
+
+                    <div className="d-flex flex-row align-items-center">
+                        <Pagination totalRecords={totalActors} pageLimit={pageSize} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+                    </div>
+                </div>
                 <Container fluid>
                     {haveAccess("ADMINN") ?
                         <div className="float-right">
@@ -75,7 +118,7 @@ class ActorList extends Component {
                         </tbody>
                     </Table>
                 </Container>
-            </div>
+            </div >
         );
     }
 }

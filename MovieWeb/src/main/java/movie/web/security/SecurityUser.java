@@ -1,7 +1,6 @@
 package movie.web.security;
 
 import lombok.Data;
-import movie.web.model.Status;
 import movie.web.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -57,10 +56,10 @@ public class SecurityUser implements UserDetails {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPasswordHash(),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
+                true,
+                true,
+                true,
+                true,
                 user.getRole().getAuthorities()
         );
     }

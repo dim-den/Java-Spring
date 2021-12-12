@@ -45,7 +45,7 @@ class Login extends Component {
             this.props.history.push('/films');
         }).catch(error => {
             if (error.response.status === 401) this.setState({ error: error.response.data, loading: false}); 
-            else this.setState({ error: "Something went wrong. Please try again later.", loading: false});
+            else {console.log(error.response.data); this.setState({ error: "Something went wrong. Please try again later.", loading: false})};
         });
     }
 

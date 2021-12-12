@@ -10,17 +10,19 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name="films")
+@Table(name="FILM")
 public class Film {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String genre;
+
+    @OneToMany(mappedBy = "film")
+    private Set<FilmGenre> filmGenres;
+
     private String description;
     private String director;
     private String country;
-    @Column(name = "release_date")
     private Date release;
     private Long budget;
     private Long fees;

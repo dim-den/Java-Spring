@@ -8,10 +8,10 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name="actors")
+@Table(name="ACTOR")
 public class Actor {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String surname;

@@ -34,7 +34,8 @@ class FilmReviewList extends Component {
 
         const filmReviewList = filmReviews.map(filmReview => {
             return <tr key={filmReview.id}>
-                <td style={{ whiteSpace: 'nowrap' }}>{filmReview.review}</td>
+                <td>{filmReview.id}</td>
+                <td style={{ whiteSpace: 'wrap', maxWidth:'700px' }}>{filmReview.review}</td>
                 <td>{filmReview.score}</td>
                 <td>{filmReview.published.substring(0, 10)}</td>
                 <td>{filmReview.userId}</td>
@@ -66,6 +67,7 @@ class FilmReviewList extends Component {
                     <Table className="mt-4">
                         <thead>
                             <tr>
+                                <th width="5%">ID</th>    
                                 <th width="50%">Review</th>
                                 <th width="5%">Score</th>
                                 <th width="10%">Published</th>
