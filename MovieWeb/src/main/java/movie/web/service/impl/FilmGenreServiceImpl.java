@@ -2,8 +2,11 @@ package movie.web.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import movie.web.model.FilmGenre;
+import movie.web.model.FilmGenre;
 import movie.web.repository.FilmGenreRepository;
 import movie.web.service.FilmGenreService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,17 @@ public class FilmGenreServiceImpl implements FilmGenreService {
     public List<FilmGenre> getAllFilmGenres() {
         return filmGenreRepository.findAll();
     }
+    
+    @Override
+    public Page<FilmGenre> getFilmGenresPaginated(int page, int size) {
+        return filmGenreRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Long getFilmGenresCount() {
+        return filmGenreRepository.getFilmGenresCount();
+    }
+
 
     @Override
     public FilmGenre saveFilmGenre(FilmGenre filmGenre) {

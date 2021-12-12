@@ -2,6 +2,7 @@ package movie.web.repository;
 
 import movie.web.model.Actor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
@@ -14,6 +15,9 @@ public interface ActorRepository extends JpaRepository<Actor, Long> {
                  @Param("p_COUNTRY") String country,
                  @Param("p_BDAY") Date bday
     );
+
+    @Query(nativeQuery = true, value = "SELECT ActorPackage.GetActorsCount FROM dual")
+    Long getActorsCount();
 
     @Procedure("ActorPackage.UpdateActor")
     void updateActor(@Param("p_ID") Long id,

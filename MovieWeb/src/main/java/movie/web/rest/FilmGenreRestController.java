@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
+import movie.web.dto.FilmCastDTO;
 import movie.web.dto.FilmGenreDTO;
 import movie.web.model.FilmGenre;
 import movie.web.model.Role;
@@ -38,6 +39,22 @@ public class FilmGenreRestController {
     @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<List<FilmGenreDTO>> getFilmGenres() {
         return ResponseEntity.ok(Mapper.mapAll(filmGenreService.getAllFilmGenres(), FilmGenreDTO.class));
+    }
+
+    @Operation(summary = "Get page of film genres", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmGenres", params = { "page", "size" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<FilmGenreDTO>> getFilmGenresPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(Mapper.mapAll(filmGenreService.getFilmGenresPaginated(page, size).toList(), FilmGenreDTO.class));
+    }
+
+    @Operation(summary = "Get count of film genres", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping("/filmGenres/count")
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<Long> getFilmGenresCount() {
+        return ResponseEntity.ok(filmGenreService.getFilmGenresCount());
     }
 
     @Operation(summary = "Save film genre", security = @SecurityRequirement(name = "developers:write"))

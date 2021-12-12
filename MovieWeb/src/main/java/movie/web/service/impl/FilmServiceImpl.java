@@ -2,8 +2,11 @@ package movie.web.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import movie.web.model.Film;
+import movie.web.model.FilmReview;
 import movie.web.repository.FilmRepository;
 import movie.web.service.FilmService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,16 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> getAllFilms() {
         return filmRepository.findAll();
+    }
+
+    @Override
+    public Page<Film> getFilmsPaginated(int page, int size) {
+        return filmRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Long getFilmsCount() {
+        return filmRepository.getFilmsCount();
     }
 
     @Override

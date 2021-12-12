@@ -17,24 +17,16 @@ class ActorList extends Component {
 
     componentDidMount() {
         makeTokenizedRequest(`/api/actors?page=${0}&size=${pageSize}`)
-            .then(response => this.setState({ actors: response.data}));
+            .then(response => this.setState({ actors: response.data }));
 
         makeTokenizedRequest(`/api/actors/count`)
-            .then(response => this.setState({totalActors: response.data }));
+            .then(response => this.setState({ totalActors: response.data }));
     }
 
     onPageChanged = data => {
-        // const { actors } = this.state;
-        // const { currentPage, totalPages, pageLimit } = data;
-
-        // const offset = (currentPage - 1) * pageLimit;
-        // const currentActors = actors.slice(offset, offset + pageLimit);
-
-        // this.setState({ currentPage, currentActors, totalPages });
-
         const { currentPage, totalPages, pageLimit } = data;
 
-        makeTokenizedRequest(`/api/actors?page=${currentPage-1}&size=${pageLimit}`)
+        makeTokenizedRequest(`/api/actors?page=${currentPage - 1}&size=${pageLimit}`)
             .then(response => {
                 const currentActors = response.data;
                 this.setState({ currentPage, currentActors, totalPages });
@@ -45,7 +37,7 @@ class ActorList extends Component {
         await makeTokenizedRequest(`api/actor/delete/${id}`, 'DELETE')
             .then(() => {
                 let updatedActors = [...this.state.actors].filter(i => i.id !== id);
-                this.setState({ actors: updatedActors });
+                this.setState({ currentActors: updatedActors });
             });
     }
 
@@ -60,6 +52,7 @@ class ActorList extends Component {
 
         const actorList = currentActors.map(actor => {
             return <tr key={actor.id}>
+                <td>{actor.id}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{actor.name}</td>
                 <td>{actor.surname}</td>
                 <td>{actor.country}</td>
@@ -82,8 +75,6 @@ class ActorList extends Component {
 
                 <div className="w-100 px-4 pt-4 d-flex flex-row flex-wrap align-items-center justify-content-between">
                     <div className="d-flex flex-row align-items-center">
-
-
                         {currentPage && (
                             <span className="current-page d-inline-block h-100 pl-4">
                                 Page <span className="font-weight-bold">{currentPage}</span> / <span className="font-weight-bold">{totalPages}</span>
@@ -97,7 +88,7 @@ class ActorList extends Component {
                     </div>
                 </div>
                 <Container fluid>
-                    {haveAccess("ADMINN") ?
+                    {haveAccess("ADMIN") ?
                         <div className="float-right">
                             <Button color="success" tag={Link} to="/actors/new">Add actor</Button>
                         </div>
@@ -107,6 +98,7 @@ class ActorList extends Component {
                     <Table className="mt-4">
                         <thead>
                             <tr>
+                                <th width="5%">ID</th>
                                 <th width="20%">Name</th>
                                 <th width="20%">Surname</th>
                                 <th width="20%">Country</th>

@@ -5,10 +5,13 @@ import movie.web.dto.RegistrationRequestDTO;
 import movie.web.exception.EmailAlreadyExistsException;
 import movie.web.exception.PasswordsMismatchException;
 import movie.web.exception.UsernameAlreadyExistsException;
+import movie.web.model.User;
 import movie.web.model.Role;
 import movie.web.model.User;
 import movie.web.repository.UserRepository;
 import movie.web.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,17 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+    
+    @Override
+    public Page<User> getUsersPaginated(int page, int size) {
+        return userRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Long getUsersCount() {
+        return userRepository.getUsersCount();
+    }
+
 
     @Override
     public User saveUser(User user) {

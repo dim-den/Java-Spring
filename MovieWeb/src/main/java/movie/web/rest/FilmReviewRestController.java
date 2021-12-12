@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.FilmReviewDTO;
+import movie.web.dto.FilmReviewDTO;
 import movie.web.model.FilmReview;
 import movie.web.service.FilmReviewService;
 import movie.web.service.FilmService;
@@ -45,6 +46,22 @@ public class FilmReviewRestController {
     @PreAuthorize("hasAuthority('developers:read')")
     ResponseEntity<List<FilmReviewDTO>> getFilmReviews() {
         return ResponseEntity.ok(Mapper.mapAll(filmReviewService.getAllFilmReviews(), FilmReviewDTO.class));
+    }
+
+    @Operation(summary = "Get page of film reviews", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmReviews", params = { "page", "size" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<FilmReviewDTO>> getFilmReviewsPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(Mapper.mapAll(filmReviewService.getFilmReviewsPaginated(page, size).toList(), FilmReviewDTO.class));
+    }
+
+    @Operation(summary = "Get count of film reviews", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping("/filmReviews/count")
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<Long> getFilmReviewsCount() {
+        return ResponseEntity.ok(filmReviewService.getFilmReviewsCount());
     }
 
     @Operation(summary = "Save film review", security = @SecurityRequirement(name = "developers:write"))

@@ -1,12 +1,14 @@
 package movie.web.service;
 
 import movie.web.model.Film;
-import movie.web.model.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface FilmService {
     List<Film> getAllFilms();
+    Page<Film> getFilmsPaginated(int page, int size);
+    Long getFilmsCount();
     Film saveFilm(Film film);
     Film getById(Long id);
     Film getByTitle(String title);

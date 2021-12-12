@@ -29,7 +29,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public Long getActorsCount() {
-        return actorRepository.count();
+        return actorRepository.getActorsCount();
     }
 
     @Override

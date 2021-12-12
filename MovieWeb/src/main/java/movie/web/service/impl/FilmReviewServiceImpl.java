@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import movie.web.model.FilmReview;
 import movie.web.repository.FilmReviewRepository;
 import movie.web.service.FilmReviewService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,16 @@ public class FilmReviewServiceImpl implements FilmReviewService {
     @Override
     public List<FilmReview> getAllFilmReviews() {
         return filmReviewRepository.findAll();
+    }
+
+    @Override
+    public Page<FilmReview> getFilmReviewsPaginated(int page, int size) {
+        return filmReviewRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Long getFilmReviewsCount() {
+        return filmReviewRepository.getFilmReviewsCount();
     }
 
     @Override

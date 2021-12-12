@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import movie.web.model.FilmCast;
 import movie.web.repository.FilmCastRepository;
 import movie.web.service.FilmCastService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,17 @@ public class FilmCastServiceImpl implements FilmCastService {
     public List<FilmCast> getAllFilmCasts() {
         return filmCastRepository.findAll();
     }
+
+    @Override
+    public Page<FilmCast> getFilmCastsPaginated(int page, int size) {
+        return filmCastRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Long getFilmCastsCount() {
+        return filmCastRepository.getFilmCastsCount();
+    }
+
 
     @Override
     public FilmCast saveFilmCast(FilmCast filmCast) {

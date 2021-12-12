@@ -3,6 +3,7 @@ package movie.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
+import movie.web.dto.ActorDTO;
 import movie.web.dto.FilmDTO;
 import movie.web.model.Film;
 import movie.web.service.FilmService;
@@ -37,6 +38,23 @@ public class FilmRestController {
     public ResponseEntity<List<FilmDTO>> getFilms() {
         return ResponseEntity.ok(Mapper.mapAll(filmService.getAllFilms(), FilmDTO.class));
     }
+
+    @Operation(summary = "Get page of films", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/films", params = { "page", "size" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<FilmDTO>> getFilmsPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(Mapper.mapAll(filmService.getFilmsPaginated(page, size).toList(), FilmDTO.class));
+    }
+
+    @Operation(summary = "Get count of films", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping("/films/count")
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<Long> getFilmsCount() {
+        return ResponseEntity.ok(filmService.getFilmsCount());
+    }
+
 
     @Operation(summary = "Save film", security = @SecurityRequirement(name = "developers:write"))
     @Loggable

@@ -3,6 +3,7 @@ package movie.web.rest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
+import movie.web.dto.ActorDTO;
 import movie.web.dto.FilmCastDTO;
 import movie.web.model.FilmCast;
 import movie.web.service.ActorService;
@@ -46,7 +47,24 @@ public class FilmCastRestController {
         return ResponseEntity.ok(Mapper.mapAll(filmCastService.getAllFilmCasts(), FilmCastDTO.class));
     }
 
-    @Operation(summary = "Save actor", security = @SecurityRequirement(name = "developers:write"))
+    @Operation(summary = "Get page of film casts", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmCasts", params = { "page", "size" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<FilmCastDTO>> getFilmCastsPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return ResponseEntity.ok(Mapper.mapAll(filmCastService.getFilmCastsPaginated(page, size).toList(), FilmCastDTO.class));
+    }
+
+    @Operation(summary = "Get count of film casts", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping("/filmCasts/count")
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<Long> getFilmCastsCount() {
+        return ResponseEntity.ok(filmCastService.getFilmCastsCount());
+    }
+
+
+    @Operation(summary = "Save film cast", security = @SecurityRequirement(name = "developers:write"))
     @Loggable
     @PostMapping("/filmCast/save")
     @PreAuthorize("hasAuthority('developers:write')")
