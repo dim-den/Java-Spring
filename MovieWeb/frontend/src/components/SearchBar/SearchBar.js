@@ -21,11 +21,6 @@ function SearchBar({ placeholder }) {
 
             makeTokenizedRequest('/api/actor?surname=' + searchWord)
                 .then(response => setActors(response.data));
-
-            // makeTokenizedRequest('/api/actor?surname=' + this.state.search)
-            //     .then(response => this.setState({ actors: JSON.stringify(response.data) }));
-
-            //   setFilteredData(newFilter);
         }
     };
 
