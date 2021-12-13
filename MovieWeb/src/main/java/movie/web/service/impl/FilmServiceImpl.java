@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +53,8 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film getByTitle(String title) {
-        return filmRepository.findByTitle(title).orElse(null);
+    public List<Film> getByTitleContainingIgnoreCase(String title) {
+        return filmRepository.findTop5ByTitleContainingIgnoreCase(title);
     }
 
     @Override

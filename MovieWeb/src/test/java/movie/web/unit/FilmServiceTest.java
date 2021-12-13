@@ -20,14 +20,14 @@ public class FilmServiceTest {
         Film expected = new Film();
         expected.setTitle("Titanic");
 
-        Film actual = filmService.getByTitle("Titanic");
+        Film actual = filmService.getByTitleContainingIgnoreCase("Black Swan").get(0);
 
         Assert.assertEquals(expected.getTitle(), actual.getTitle());
     }
 
     @Test
     public void getByTitle_notExistingTitle_returnNull() {
-        Film result = filmService.getByTitle("NotExisting");
+        Film result = filmService.getByTitleContainingIgnoreCase("NotExisting").get(0);
 
         Assert.assertNull(result);
     }

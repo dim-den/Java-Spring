@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
-import './../../App.css';
+import { userAuthrorized } from './../../utils/Common';
 import AppNavbar from './../Navbar/AppNavbar';
+import SearchBar from "./../SearchBar/SearchBar";
+import './../../App.css';
 import { withRouter } from 'react-router-dom';
-import { getEmail } from './../../utils/Common';
 
 class Home extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            user: getEmail()
-        }
-    }
+    };
 
     render() {
-        const { user } = this.state;
-
         return (
             <div>
                 <AppNavbar />
-                <div>
-                    Welcome {user ? user : 'new user'}!<br /><br />
-                </div>
+
+
+                {userAuthrorized() ?
+                    <div className="home">
+                        <SearchBar placeholder="Looking for..." />
+                    </div>
+                    :
+                    <h4>You have to authorize first</h4>
+                }
             </div>
         );
     }

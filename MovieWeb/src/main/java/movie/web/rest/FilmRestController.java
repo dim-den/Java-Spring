@@ -76,8 +76,8 @@ public class FilmRestController {
     @Loggable
     @GetMapping("/film")
     @PreAuthorize("hasAuthority('developers:read')")
-    ResponseEntity<FilmDTO> getFilmByTitle(@RequestParam @NotNull String title) {
-        return ResponseEntity.ok(Mapper.map(filmService.getByTitle(title), FilmDTO.class));
+    ResponseEntity<List<FilmDTO>> getFilmByTitle(@RequestParam @NotNull String title) {
+        return ResponseEntity.ok(Mapper.mapAll(filmService.getByTitleContainingIgnoreCase(title), FilmDTO.class));
     }
 
     @Operation(summary = "Update film by ID", security = @SecurityRequirement(name = "developers:write"))

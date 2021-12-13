@@ -11,7 +11,7 @@ public interface FilmService {
     Long getFilmsCount();
     Film saveFilm(Film film);
     Film getById(Long id);
-    Film getByTitle(String title);
+    List<Film> getByTitleContainingIgnoreCase(String title);
     void deleteFilmById(Long id);
     void updateFilm(Long id, Film film);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,11 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public Page<Actor> getActorsPaginated(int page, int size) {
         return actorRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public List<Actor> getBySurnameContainingIgnoreCase(String surname) {
+        return actorRepository.findTop5BySurnameContainingIgnoreCase(surname);
     }
 
     @Override

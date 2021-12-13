@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface FilmRepository extends JpaRepository<Film, Long> {
@@ -38,5 +39,5 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
     @Procedure("FilmPackage.DeleteFilm")
     void deleteFilmById(@Param("p_ID") Long id);
 
-    Optional<Film> findByTitle(String title);
+    List<Film> findTop5ByTitleContainingIgnoreCase(String title);
 }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.ActorDTO;
+import movie.web.dto.FilmDTO;
 import movie.web.model.Actor;
 import movie.web.model.Role;
 import movie.web.service.ActorService;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
@@ -47,6 +49,14 @@ public class ActorRestController {
     @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<List<ActorDTO>> getActorsPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
         return ResponseEntity.ok(Mapper.mapAll(actorService.getActorsPaginated(page, size).toList(), ActorDTO.class));
+    }
+
+    @Operation(summary = "Get actor by title name", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping("/actor")
+    @PreAuthorize("hasAuthority('developers:read')")
+    ResponseEntity<List<ActorDTO>> getActorBySurname(@RequestParam @NotNull String surname) {
+        return ResponseEntity.ok(Mapper.mapAll(actorService.getBySurnameContainingIgnoreCase(surname), ActorDTO.class));
     }
 
     @Operation(summary = "Get count of actors", security = @SecurityRequirement(name = "developers:read"))
