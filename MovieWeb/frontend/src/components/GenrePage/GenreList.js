@@ -11,7 +11,7 @@ class GenreList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { genres: [], currentGenres: [], totalGenres: 0, currentPage: null, totalPages: null };
+        this.state = { genres: [], currentGenres: [], totalGenres: 0, currentPage: null, totalPages: null, error: null };
         this.remove = this.remove.bind(this);
     }
 
@@ -34,15 +34,21 @@ class GenreList extends Component {
     }
 
     async remove(id) {
+        this.setState({ error: null })
+
         await makeTokenizedRequest(`api/genre/delete/${id}`, 'DELETE')
             .then(() => {
                 let updatedGenres = [...this.state.genres].filter(i => i.id !== id);
                 this.setState({ currentGenres: updatedGenres });
+            })
+            .catch(error => {
+                if (error.response.status === 500) this.setState({ error: "Can't delete this row (constraint)" });
+                else this.setState({ error: error.message });
             });
     }
 
     render() {
-        const { currentGenres, totalGenres, currentPage, totalPages, isLoading } = this.state;
+        const { currentGenres, totalGenres, currentPage, totalPages, isLoading, error } = this.state;
 
         if (totalGenres === 0) return null;
 
@@ -92,6 +98,7 @@ class GenreList extends Component {
                         </div>
                         : null
                     }
+                    <h4 style={{ color: 'red' }}>{error}</h4>
                     <h3>Genres</h3>
                     <Table className="mt-4">
                         <thead>

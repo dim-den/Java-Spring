@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import { haveAccess, getToken, makeTokenizedRequest } from './../../utils/Common';
 import Pagination from './../Pagination/Pagination';
 
-const pageSize = 10;
+const pageSize = 3;
 
 class ActorList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { actors: [], currentActors: [], totalActors: 0, currentPage: null, totalPages: null };
+        this.state = { actors: [], currentActors: [], totalActors: 0, currentPage: null, totalPages: null, error: null};
         this.remove = this.remove.bind(this);
     }
 
@@ -34,15 +34,21 @@ class ActorList extends Component {
     }
 
     async remove(id) {
+        this.setState({ error: null })
+
         await makeTokenizedRequest(`api/actor/delete/${id}`, 'DELETE')
             .then(() => {
                 let updatedActors = [...this.state.actors].filter(i => i.id !== id);
                 this.setState({ currentActors: updatedActors });
+            })
+            .catch(error => {
+                if (error.response.status === 500) this.setState({ error: "Can't delete this row (constraint)" });
+                else this.setState({ error: error.message });
             });
     }
 
     render() {
-        const { currentActors, totalActors, currentPage, totalPages, isLoading } = this.state;
+        const { currentActors, totalActors, currentPage, totalPages, isLoading, error } = this.state;
 
         if (totalActors === 0) return null;
 
@@ -94,6 +100,7 @@ class ActorList extends Component {
                         </div>
                         : null
                     }
+                    <h4 style={{ color: 'red' }}>{error}</h4>
                     <h3>Actors</h3>
                     <Table className="mt-4">
                         <thead>

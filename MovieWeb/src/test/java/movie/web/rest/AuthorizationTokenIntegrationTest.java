@@ -28,14 +28,14 @@ public class AuthorizationTokenIntegrationTest {
     }
 
     @Test
-    void accessToResouce_whenNotAuthorized_then4xxError() throws Exception {
+    void accessToResource_whenNotAuthorized_then4xxError() throws Exception {
         setUp();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/film/save"))
                 .andExpect(status().is4xxClientError());
     }
 
     @Test
-    void ccessToResouce_whenAuthorized_then2xxStatus() throws Exception {
+    void accessToResource_whenAuthorized_then2xxStatus() throws Exception {
         setUp();
         Role role = Role.USER;
         String token = jwtTokenProvider.createToken("admin@mail.ru", role.name());

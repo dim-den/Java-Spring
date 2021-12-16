@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.ActorDTO;
-import movie.web.dto.FilmDTO;
 import movie.web.model.Actor;
 import movie.web.model.Role;
 import movie.web.service.ActorService;

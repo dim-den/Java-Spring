@@ -11,7 +11,7 @@ class UserList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { users: [], currentUsers: [], totalUsers: 0, currentPage: null, totalPages: null };
+        this.state = { users: [], currentUsers: [], totalUsers: 0, currentPage: null, totalPages: null, error: null };
         this.remove = this.remove.bind(this);
     }
 
@@ -34,15 +34,21 @@ class UserList extends Component {
     }
 
     async remove(id) {
+        this.setState({ error: null })
+
         await makeTokenizedRequest(`api/user/delete/${id}`, 'DELETE')
-        .then(() => {
-            let updatedUsers = [...this.state.users].filter(i => i.id !== id);
-            this.setState({ currentUsers: updatedUsers });
-        });
+            .then(() => {
+                let updatedUsers = [...this.state.users].filter(i => i.id !== id);
+                this.setState({ currentUsers: updatedUsers });
+            })
+            .catch(error => {
+                if (error.response.status === 500) this.setState({ error: "Can't delete this row (constraint)" });
+                else this.setState({ error: error.message });
+            });
     }
 
     render() {
-        const { currentUsers, totalUsers, currentPage, totalPages, isLoading } = this.state;
+        const { currentUsers, totalUsers, currentPage, totalPages, isLoading, error } = this.state;
 
         if (totalUsers === 0) return null;
 
@@ -94,6 +100,7 @@ class UserList extends Component {
                         </div>
                         : null
                     }
+                    <h4 style={{ color: 'red' }}>{error}</h4>
                     <h3>Users</h3>
                     <Table className="mt-4">
                         <thead>

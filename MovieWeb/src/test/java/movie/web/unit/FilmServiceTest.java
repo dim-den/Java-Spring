@@ -18,7 +18,7 @@ public class FilmServiceTest {
     @Test
     public void getByTitle_existingTitle_returnFilm() {
         Film expected = new Film();
-        expected.setTitle("Titanic");
+        expected.setTitle("Black Swan");
 
         Film actual = filmService.getByTitleContainingIgnoreCase("Black Swan").get(0);
 
@@ -27,9 +27,9 @@ public class FilmServiceTest {
 
     @Test
     public void getByTitle_notExistingTitle_returnNull() {
-        Film result = filmService.getByTitleContainingIgnoreCase("NotExisting").get(0);
+        List<Film> result = filmService.getByTitleContainingIgnoreCase("NotExisting");
 
-        Assert.assertNull(result);
+        Assert.assertTrue(result.size() == 0);
     }
 
     @Test

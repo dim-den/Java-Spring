@@ -11,7 +11,7 @@ class FilmList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { films: [], currentFilms: [], totalFilms: 0, currentPage: null, totalPages: null };
+        this.state = { films: [], currentFilms: [], totalFilms: 0, currentPage: null, totalPages: null, error: null };
         this.remove = this.remove.bind(this);
     }
 
@@ -34,15 +34,21 @@ class FilmList extends Component {
     }
 
     async remove(id) {
+        this.setState({ error: null })
+
         await makeTokenizedRequest(`api/film/delete/${id}`, 'DELETE')
             .then(() => {
                 let updatedfilms = [...this.state.films].filter(i => i.id !== id);
                 this.setState({ currentFilms: updatedfilms });
+            }) 
+            .catch(error => {
+                if (error.response.status === 500) this.setState({ error: "Can't delete this row (constraint)"});
+                else this.setState({ error: error.message });
             });
     }   
 
     render() {
-        const { currentFilms, totalFilms, currentPage, totalPages, isLoading } = this.state;
+        const { currentFilms, totalFilms, currentPage, totalPages, isLoading, error } = this.state;
 
         if (totalFilms === 0) return null;
 
@@ -97,6 +103,7 @@ class FilmList extends Component {
                         </div>
                         : null
                     }
+                    <h4 style={{ color: 'red' }}>{error}</h4>
                     <h3>Films</h3>
                     <Table className="mt-4">
                         <thead>
