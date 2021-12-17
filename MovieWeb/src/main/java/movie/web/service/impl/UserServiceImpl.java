@@ -1,17 +1,15 @@
 package movie.web.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import movie.web.dto.AuthenticationRequestDTO;
 import movie.web.dto.RegistrationRequestDTO;
-import movie.web.exception.EmailAlreadyExistsException;
 import movie.web.exception.PasswordsMismatchException;
-import movie.web.exception.UsernameAlreadyExistsException;
-import movie.web.model.User;
-import movie.web.model.Role;
 import movie.web.model.User;
 import movie.web.repository.UserRepository;
 import movie.web.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-    
+
     @Override
     public Page<User> getUsersPaginated(int page, int size) {
         return userRepository.findAll(PageRequest.of(page, size));
@@ -83,25 +81,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(RegistrationRequestDTO registrationRequestDTO) throws Exception {
-        if(!registrationRequestDTO.getPassword().equals(registrationRequestDTO.getConfirmPassword())) {
-            throw new PasswordsMismatchException( "Password doesn't match confirm password");
+    public void login(AuthenticationRequestDTO authenticationRequestDTO) throws JpaSystemException {
+        String encoded = passwordEncoder.encode(authenticationRequestDTO.getPassword());
+        userRepository.login(authenticationRequestDTO.getEmail(), encoded);
+    }
+
+    @Override
+    public void registerUser(RegistrationRequestDTO registrationRequestDTO) throws JpaSystemException, PasswordsMismatchException {
+        if (!registrationRequestDTO.getPassword().equals(registrationRequestDTO.getConfirmPassword())) {
+            throw new PasswordsMismatchException("Password doesn't match confirm password");
         }
 
-        if (getByEmail(registrationRequestDTO.getEmail()) != null) {
-            throw new EmailAlreadyExistsException( "This email is already in use");
-        }
-
-        if (getByUsername(registrationRequestDTO.getUsername()) != null) {
-            throw new UsernameAlreadyExistsException("This username is already exists");
-        }
-
-        User user = new User();
-        user.setEmail(registrationRequestDTO.getEmail());
-        user.setUsername(registrationRequestDTO.getUsername());
-        user.setPasswordHash(passwordEncoder.encode(registrationRequestDTO.getPassword()));
-        user.setRole(Role.USER);
-
-        return saveUser(user);
+        userRepository.register(registrationRequestDTO.getEmail(),
+                registrationRequestDTO.getUsername(),
+                passwordEncoder.encode(registrationRequestDTO.getPassword()),
+                "USER");
     }
 }

@@ -5,12 +5,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import movie.web.aop.Loggable;
 import movie.web.dto.AuthenticationRequestDTO;
 import movie.web.dto.RegistrationRequestDTO;
+import movie.web.exception.EmailAlreadyExistsException;
+import movie.web.exception.PasswordsMismatchException;
+import movie.web.exception.UsernameAlreadyExistsException;
 import movie.web.model.User;
 import movie.web.security.JwtTokenProvider;
 import movie.web.service.UserService;
 import movie.web.service.impl.UserServiceImpl;
+import oracle.jdbc.OracleDatabaseException;
+import org.hibernate.exception.GenericJDBCException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -25,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,40 +53,52 @@ public class AuthRestController {
     @Loggable
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
-       try {
-           authenticationManager
-                   .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-           User user = userService.getByEmail(request.getEmail());
-           if(user == null) new UsernameNotFoundException("User doesn't exists");
-
-           String token = jwtTokenProvider.createToken(request.getEmail(), user.getRole().name());
-           Map<Object, Object> response = new HashMap<>();
-           response.put("email", user.getEmail());
-           response.put("token", token);
-           response.put("role", user.getRole().toString());
-
-           return ResponseEntity.ok(response);
-       } catch (AuthenticationException e) {
-           return new ResponseEntity<>("Wrong password or email", HttpStatus.UNAUTHORIZED);
-       }
-    }
-
-    @Operation(summary = "Register ruser, returns JWT token if success")
-    @Loggable
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequestDTO requestDTO) {
         try {
-            User user = userService.registerUser(requestDTO);
+            authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            User user = userService.getByEmail(request.getEmail());
+            if(user == null) new UsernameNotFoundException("User doesn't exists");
 
-            String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
+            String token = jwtTokenProvider.createToken(request.getEmail(), user.getRole().name());
             Map<Object, Object> response = new HashMap<>();
             response.put("email", user.getEmail());
             response.put("token", token);
             response.put("role", user.getRole().toString());
 
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (AuthenticationException e) {
+            return new ResponseEntity<>("Wrong password or email", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @Operation(summary = "Register user, returns JWT token if success")
+    @Loggable
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequestDTO requestDTO) {
+        try {
+            userService.registerUser(requestDTO);
+
+            String token = jwtTokenProvider.createToken(requestDTO.getEmail(), "USER");
+            Map<Object, Object> response = new HashMap<>();
+            response.put("email", requestDTO.getEmail());
+            response.put("token", token);
+            response.put("role", "USER");
+
+            return ResponseEntity.ok(response);
+        } catch (JpaSystemException e) {
+            GenericJDBCException cause = (GenericJDBCException) e.getCause();
+            int errorCode = cause.getErrorCode();
+            String errorMessage = "An error occurred";
+            switch (errorCode) {
+                case 20111: errorMessage = "Email already exists"; break;
+                case 20112: errorMessage = "Username already exists"; break;
+                case 20113: errorMessage = "Wrong role name"; break;
+            }
+
+            return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
+        }
+        catch (PasswordsMismatchException e) {
+            return new ResponseEntity<>("Password doesn't match confirm password", HttpStatus.UNAUTHORIZED);
         }
     }
 

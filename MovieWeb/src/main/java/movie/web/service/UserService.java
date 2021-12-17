@@ -1,9 +1,14 @@
 package movie.web.service;
 
+import movie.web.dto.AuthenticationRequestDTO;
 import movie.web.dto.RegistrationRequestDTO;
+import movie.web.exception.PasswordsMismatchException;
 import movie.web.model.User;
+import oracle.jdbc.OracleDatabaseException;
 import org.springframework.data.domain.Page;
+import org.springframework.orm.jpa.JpaSystemException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface UserService {
@@ -16,5 +21,6 @@ public interface UserService {
     User getByUsername(String username);
     void deleteUserByID(Long id);
     void updateUser(Long id, User user);
-    User registerUser(RegistrationRequestDTO registrationRequestDTO) throws Exception;
+    void login(AuthenticationRequestDTO authenticationRequestDTO) throws JpaSystemException;
+    void registerUser(RegistrationRequestDTO registrationRequestDTO) throws JpaSystemException, PasswordsMismatchException;
 }
