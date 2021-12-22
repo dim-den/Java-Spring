@@ -43,6 +43,14 @@ public class UserRestController {
         return ResponseEntity.ok(Mapper.mapAll(userService.getUsersPaginated(page, size).toList(), UserDTO.class));
     }
 
+    @Operation(summary = "Get page of users", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/user", params = { "email"})
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(Mapper.map(userService.getByEmail(email), UserDTO.class));
+    }
+
     @Operation(summary = "Get count of users", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/users/count")

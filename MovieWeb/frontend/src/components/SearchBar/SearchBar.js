@@ -38,6 +38,8 @@ function SearchBar({ placeholder }) {
     };
 
     return (
+            
+
         <div className="search">
             <div className="searchInputs">
                 <input
@@ -58,8 +60,9 @@ function SearchBar({ placeholder }) {
             { films.length !== 0 && (
                 <div className="dataResult">
                     {films.map((item) => {
+                        let path = "film/" + item.title;
                         return (
-                            <a className="dataItem" href='#' target="_blank">
+                            <a className="dataItem" href={path}>
                                 <p>{item.title} ({item.director}, {item.country})</p>
                             </a>
                         );
@@ -70,8 +73,9 @@ function SearchBar({ placeholder }) {
             { actors.length !== 0 && (
                 <div className="dataResult">
                     {actors.map((item) => {
+                         let path = "actor/" + item.id;
                         return (
-                            <a className="dataItem" href='#' target="_blank">
+                            <a className="dataItem" href={path}>
                                 <p>{item.name} {item.surname} ({calculate_age(item.bday)} years, {item.country}) </p>
                             </a>
                         );

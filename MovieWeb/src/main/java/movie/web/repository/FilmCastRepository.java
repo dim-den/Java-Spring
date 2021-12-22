@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 
 public interface FilmCastRepository extends JpaRepository<FilmCast, Long> {
     @Query(nativeQuery = true, value = "SELECT FilmCastPackage.GetFilmCastsCount FROM dual")
@@ -29,4 +30,6 @@ public interface FilmCastRepository extends JpaRepository<FilmCast, Long> {
 
     @Procedure("FilmCastPackage.DeleteFilmCast")
     void deleteFilmCastById(@Param("p_ID") Long id);
+
+    List<FilmCast> getByActorId(Long actorId);
 }

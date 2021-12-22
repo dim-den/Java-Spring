@@ -55,6 +55,14 @@ public class FilmCastRestController {
         return ResponseEntity.ok(Mapper.mapAll(filmCastService.getFilmCastsPaginated(page, size).toList(), FilmCastDTO.class));
     }
 
+    @Operation(summary = "Get film cast by actor id", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmCast", params = { "actorId"})
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<FilmCastDTO>> getFilmCastByActor(@RequestParam("actorId") Long actorId) {
+        return ResponseEntity.ok(Mapper.mapAll(filmCastService.getByActorId(actorId), FilmCastDTO.class));
+    }
+
     @Operation(summary = "Get count of film casts", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/filmCasts/count")

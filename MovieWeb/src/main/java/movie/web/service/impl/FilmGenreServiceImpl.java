@@ -29,6 +29,11 @@ public class FilmGenreServiceImpl implements FilmGenreService {
     }
 
     @Override
+    public List<FilmGenre> getByFilmId(Long id) {
+        return  filmGenreRepository.getByFilmId(id);
+    }
+
+    @Override
     public Long getFilmGenresCount() {
         return filmGenreRepository.getFilmGenresCount();
     }

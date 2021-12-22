@@ -50,7 +50,7 @@ public class ActorRestController {
         return ResponseEntity.ok(Mapper.mapAll(actorService.getActorsPaginated(page, size).toList(), ActorDTO.class));
     }
 
-    @Operation(summary = "Get actor by title name", security = @SecurityRequirement(name = "developers:read"))
+    @Operation(summary = "Get actor by surname", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/actor")
     @PreAuthorize("hasAuthority('developers:read')")

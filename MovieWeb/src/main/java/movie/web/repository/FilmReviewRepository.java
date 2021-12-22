@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 
 public interface FilmReviewRepository extends JpaRepository<FilmReview, Long> {
     @Query(nativeQuery = true, value = "SELECT FilmReviewPackage.GetFilmReviewsCount FROM dual")
@@ -32,4 +33,9 @@ public interface FilmReviewRepository extends JpaRepository<FilmReview, Long> {
     @Procedure("FilmReviewPackage.DeleteFilmReview")
     void deleteFilmReviewById(@Param("p_ID") Long id);
 
+    @Query(nativeQuery = true, value = "SELECT FilmReviewPackage.GetFilmAvgScore(:p_FILM_ID) FROM dual")
+    Float getFilmAvgScore(@Param("p_FILM_ID") Long filmId);
+
+    FilmReview getByFilmIdAndUserId(Long filmId, Long userId);
+    List<FilmReview> getByFilmId(Long filmId);
 }

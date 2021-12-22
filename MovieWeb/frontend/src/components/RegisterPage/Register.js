@@ -133,7 +133,7 @@ class Register extends Component {
                         <Input type="password" name="confirmPassword" id="confirmPassword" value={item.confirmPassword || ''}
                             onChange={this.handleChange} autoComplete="confirmPassword" />
                     </div>
-                    <FormGroup>
+                    <FormGroup className='mt-2'>
                         <Button color="primary" type="submit" disabled={this.state.loading || !this.state.formValid}>Register</Button>{' '}
                         <Button color="secondary" tag={Link} to="/login">Back to login</Button>
                     </FormGroup>

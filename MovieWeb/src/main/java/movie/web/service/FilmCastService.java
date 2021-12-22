@@ -13,4 +13,5 @@ public interface FilmCastService {
     FilmCast getById(Long id);
     void deleteFilmCastById(Long id);
     void updateFilmCast(Long id, FilmCast filmCast);
+    List<FilmCast> getByActorId(Long actorId);
 }

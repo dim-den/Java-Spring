@@ -70,7 +70,7 @@ class Login extends Component {
                         <Input type="password" name="password" id="password" value={item.password || ''}
                             onChange={this.handleChange} autoComplete="password" />
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup className='mt-2'>
                         <Button color="primary" type="submit" disabled={this.state.loading || !item.email || !item.password}>Login</Button>{' '}
                         <Button color="secondary" tag={Link} to="/register">Don't have an account?</Button>
                     </FormGroup>

@@ -1,6 +1,7 @@
 package movie.web.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import movie.web.model.Film;
 import movie.web.model.FilmReview;
 import movie.web.repository.FilmReviewRepository;
 import movie.web.service.FilmReviewService;
@@ -28,6 +29,24 @@ public class FilmReviewServiceImpl implements FilmReviewService {
     }
 
     @Override
+    public Float getFilmAvgScore(Long filmId) {
+        return filmReviewRepository.getFilmAvgScore(filmId);
+    }
+
+    @Override
+    public FilmReview getByFilmIdAndUserId(Long filmId, Long userId) {
+        return filmReviewRepository.getByFilmIdAndUserId(filmId, userId);
+    }
+
+    @Override
+    public List<FilmReview> getFilmReviewsByFilmId(Long filmId) {
+        List<FilmReview> filmReviews = filmReviewRepository.getByFilmId(filmId);
+        filmReviews.removeIf(filmReview -> filmReview.getReview() == null || filmReview.getReview().length() == 0);
+
+        return filmReviews;
+    }
+
+    @Override
     public Long getFilmReviewsCount() {
         return filmReviewRepository.getFilmReviewsCount();
     }
@@ -40,6 +59,40 @@ public class FilmReviewServiceImpl implements FilmReviewService {
                 filmReview.getPublished(),
                 filmReview.getFilm().getId(),
                 filmReview.getUser().getId());
+        return filmReview;
+    }
+
+    @Override
+    public FilmReview leaveScore(FilmReview filmReview) {
+        FilmReview existingFilmReview = filmReviewRepository.getByFilmIdAndUserId(filmReview.getFilm().getId(),
+                                                                                  filmReview.getUser().getId());
+
+        if(existingFilmReview == null) {
+            saveFilmReview(filmReview);
+        }
+        else {
+            existingFilmReview.setScore(filmReview.getScore());
+            if(existingFilmReview.getReview() == null) existingFilmReview.setReview("");
+            updateFilmReview(existingFilmReview.getId(), existingFilmReview);
+        }
+
+        return filmReview;
+    }
+
+    @Override
+    public FilmReview leaveReview(FilmReview filmReview) {
+        FilmReview existingFilmReview = filmReviewRepository.getByFilmIdAndUserId(filmReview.getFilm().getId(),
+                filmReview.getUser().getId());
+
+        if(existingFilmReview == null) {
+            saveFilmReview(filmReview);
+        }
+        else {
+            existingFilmReview.setScore(filmReview.getScore());
+            existingFilmReview.setReview(filmReview.getReview());
+            updateFilmReview(existingFilmReview.getId(), existingFilmReview);
+        }
+
         return filmReview;
     }
 

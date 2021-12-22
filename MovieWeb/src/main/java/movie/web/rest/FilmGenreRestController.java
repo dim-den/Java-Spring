@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -47,6 +48,18 @@ public class FilmGenreRestController {
     @PreAuthorize("hasAuthority('developers:read')")
     public ResponseEntity<List<FilmGenreDTO>> getFilmGenresPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
         return ResponseEntity.ok(Mapper.mapAll(filmGenreService.getFilmGenresPaginated(page, size).toList(), FilmGenreDTO.class));
+    }
+
+    @Operation(summary = "Get film genres of film", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmGenres", params = {"filmId"})
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<String> getFilmGenresByFilmId(@RequestParam("filmId") Long filmId ) {
+        List<FilmGenre> result = filmGenreService.getByFilmId(filmId);
+        List<String> genre_names = new ArrayList<String>();
+        result.forEach(e -> genre_names.add(e.getGenre().getName().toLowerCase()));
+
+        return ResponseEntity.ok(String.join(", ", genre_names));
     }
 
     @Operation(summary = "Get count of film genres", security = @SecurityRequirement(name = "developers:read"))

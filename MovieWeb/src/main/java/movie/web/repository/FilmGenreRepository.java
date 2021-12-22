@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface FilmGenreRepository extends JpaRepository<FilmGenre, Long> {
@@ -26,5 +27,7 @@ public interface FilmGenreRepository extends JpaRepository<FilmGenre, Long> {
 
     @Procedure("FilmGenrePackage.DeleteFilmGenre")
     void deleteFilmGenreById(@Param("p_ID") Long id);
+
+    List<FilmGenre> getByFilmId(Long id);
 }
 

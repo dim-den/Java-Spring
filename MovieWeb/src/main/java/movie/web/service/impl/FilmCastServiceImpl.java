@@ -63,4 +63,9 @@ public class FilmCastServiceImpl implements FilmCastService {
                     filmCast.getFilm().getId());
         }
     }
+
+    @Override
+    public List<FilmCast> getByActorId(Long actorId) {
+        return filmCastRepository.getByActorId(actorId);
+    }
 }

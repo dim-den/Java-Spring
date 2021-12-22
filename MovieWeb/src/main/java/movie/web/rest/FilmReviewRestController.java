@@ -56,6 +56,31 @@ public class FilmReviewRestController {
         return ResponseEntity.ok(Mapper.mapAll(filmReviewService.getFilmReviewsPaginated(page, size).toList(), FilmReviewDTO.class));
     }
 
+    @Operation(summary = "Get film reviews by film", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmReviews", params = { "filmId" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<List<FilmReviewDTO>> getFilmReviewByFilmId(@RequestParam("filmId") Long filmId) {
+        return ResponseEntity.ok(Mapper.mapAll(filmReviewService.getFilmReviewsByFilmId(filmId), FilmReviewDTO.class));
+    }
+
+    @Operation(summary = "Get film review by film and user", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmReview", params = { "filmId", "userId" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<FilmReviewDTO> getFilmReviewsPaginated(@RequestParam("filmId") Long filmId, @RequestParam("userId") Long userId) {
+        return ResponseEntity.ok(Mapper.map(filmReviewService.getByFilmIdAndUserId(filmId, userId), FilmReviewDTO.class));
+    }
+
+    @Operation(summary = "Get average score of film", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @GetMapping(value = "/filmReviews/score", params = { "filmId" })
+    @PreAuthorize("hasAuthority('developers:read')")
+    public ResponseEntity<Float> getFilmAvgScore(@RequestParam("filmId") Long filmId)  {
+        return ResponseEntity.ok(filmReviewService.getFilmAvgScore(filmId));
+    }
+
+
     @Operation(summary = "Get count of film reviews", security = @SecurityRequirement(name = "developers:read"))
     @Loggable
     @GetMapping("/filmReviews/count")
@@ -74,6 +99,30 @@ public class FilmReviewRestController {
         filmReview.setUser(userService.getById(filmReviewDTO.getUserId()));
 
         filmReviewService.saveFilmReview(filmReview);
+    }
+
+    @Operation(summary = "Leave score for film", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @PostMapping("/filmReview/leaveScore")
+    @PreAuthorize("hasAuthority('developers:write')")
+    void leaveScore(@RequestBody @Valid FilmReviewDTO filmReviewDTO) {
+        FilmReview filmReview = Mapper.map(filmReviewDTO, FilmReview.class);
+        filmReview.setFilm(filmService.getById(filmReviewDTO.getFilmId()));
+        filmReview.setUser(userService.getById(filmReviewDTO.getUserId()));
+
+        filmReviewService.leaveScore(filmReview);
+    }
+
+    @Operation(summary = "Leave review for film", security = @SecurityRequirement(name = "developers:read"))
+    @Loggable
+    @PostMapping("/filmReview/leaveReview")
+    @PreAuthorize("hasAuthority('developers:write')")
+    void leaveReview(@RequestBody @Valid FilmReviewDTO filmReviewDTO) {
+        FilmReview filmReview = Mapper.map(filmReviewDTO, FilmReview.class);
+        filmReview.setFilm(filmService.getById(filmReviewDTO.getFilmId()));
+        filmReview.setUser(userService.getById(filmReviewDTO.getUserId()));
+
+        filmReviewService.leaveReview(filmReview);
     }
 
     @Operation(summary = "Get film review by ID", security = @SecurityRequirement(name = "developers:read"))

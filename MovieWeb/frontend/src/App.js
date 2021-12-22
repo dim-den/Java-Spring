@@ -4,8 +4,11 @@ import Home from './components/HomePage/Home';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import FilmList from './components/FilmPage/FilmList';
 import FilmEdit from "./components/FilmPage/FilmEdit";
+import FilmPage from "./components/FilmPage/FilmPage";
+import FilmLeaveReviewPage from "./components/FilmPage/FilmLeaveReviewPage";
 import ActorList from './components/ActorPage/ActorList';
 import ActorEdit from "./components/ActorPage/ActorEdit";
+import ActorPage from "./components/ActorPage/ActorPage";
 import UserList from './components/UserPage/UserList';
 import UserEdit from "./components/UserPage/UserEdit";
 import FilmReviewList from './components/FilmReviewPage/FilmReviewList';
@@ -33,8 +36,11 @@ class App extends Component {
             
             <PrivateRoute hasRole="USER" path='/films' exact={true} component={FilmList}/>
             <PrivateRoute hasRole="ADMIN" path='/films/:id' component={FilmEdit}/>
+            <PrivateRoute hasRole="USER" path='/film/review/:id' component={FilmLeaveReviewPage}/>
+            <PrivateRoute hasRole="USER" path='/film/:title' component={FilmPage}/>
             <PrivateRoute hasRole="USER" path='/actors' exact={true} component={ActorList}/>
             <PrivateRoute hasRole="ADMIN" path='/actors/:id' component={ActorEdit}/>
+            <PrivateRoute hasRole="USER" path='/actor/:id' component={ActorPage}/>
             <PrivateRoute hasRole="ADMIN" path='/users' exact={true} component={UserList}/>
             <PrivateRoute hasRole="ADMIN" path='/users/:id' component={UserEdit}/>
             <PrivateRoute hasRole="USER" path='/filmReviews' exact={true} component={FilmReviewList}/>
