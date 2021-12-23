@@ -94,6 +94,9 @@ class FilmPage extends Component {
             .catch(error => {
                 this.setState({ error: "An error occurred while leaving a score" });
             });
+
+        film.avgScore = await (await makeTokenizedRequest(`/api/filmReviews/score?filmId=${film.id}`)).data.toFixed(2);
+        this.setState({film});
     }
 
 

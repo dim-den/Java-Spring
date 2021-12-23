@@ -14,14 +14,12 @@ class Home extends Component {
         return (
             <div>
                 <AppNavbar />
-
-
                 {userAuthrorized() ?
                     <div className="home">
                         <SearchBar placeholder="Looking for..." />
                     </div>
                     :
-                    <h4>You have to authorize first</h4>
+                    <h4 className='mt-5'>You have to authorize first</h4>
                 }
             </div>
         );

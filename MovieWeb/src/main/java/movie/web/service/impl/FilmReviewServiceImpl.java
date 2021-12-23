@@ -5,10 +5,13 @@ import movie.web.model.Film;
 import movie.web.model.FilmReview;
 import movie.web.repository.FilmReviewRepository;
 import movie.web.service.FilmReviewService;
+import movie.web.util.FilmReviewValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
 import java.util.List;
 
@@ -17,6 +20,7 @@ import java.util.List;
 @Transactional
 public class FilmReviewServiceImpl implements FilmReviewService {
     private final FilmReviewRepository filmReviewRepository;
+    private final FilmReviewValidator filmReviewValidator;
 
     @Override
     public List<FilmReview> getAllFilmReviews() {
@@ -81,18 +85,22 @@ public class FilmReviewServiceImpl implements FilmReviewService {
 
     @Override
     public FilmReview leaveReview(FilmReview filmReview) {
-        FilmReview existingFilmReview = filmReviewRepository.getByFilmIdAndUserId(filmReview.getFilm().getId(),
-                filmReview.getUser().getId());
+        DataBinder binder = new DataBinder(filmReview);
+        binder.setValidator(filmReviewValidator);
+        binder.validate();
+        BindingResult results = binder.getBindingResult();
+        if(!results.hasErrors()) {
+            FilmReview existingFilmReview = filmReviewRepository.getByFilmIdAndUserId(filmReview.getFilm().getId(),
+                    filmReview.getUser().getId());
 
-        if(existingFilmReview == null) {
-            saveFilmReview(filmReview);
+            if (existingFilmReview == null) {
+                saveFilmReview(filmReview);
+            } else {
+                existingFilmReview.setScore(filmReview.getScore());
+                existingFilmReview.setReview(filmReview.getReview());
+                updateFilmReview(existingFilmReview.getId(), existingFilmReview);
+            }
         }
-        else {
-            existingFilmReview.setScore(filmReview.getScore());
-            existingFilmReview.setReview(filmReview.getReview());
-            updateFilmReview(existingFilmReview.getId(), existingFilmReview);
-        }
-
         return filmReview;
     }
 
